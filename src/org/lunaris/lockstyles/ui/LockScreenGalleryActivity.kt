@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -42,6 +43,7 @@ import org.lunaris.lockstyles.GalleryStore
 import org.lunaris.lockstyles.GalleryWallpaper
 import org.lunaris.lockstyles.GalleryWallpaper.Kind
 import org.lunaris.lockstyles.LockScreen
+import org.lunaris.lockstyles.R
 import org.lunaris.lockstyles.Shortcuts
 import org.lunaris.lockstyles.StockClock
 import org.lunaris.lockstyles.settings.ui.LockSettingsActivity
@@ -219,7 +221,9 @@ class LockScreenGalleryActivity : ComponentActivity() {
                             onDone = { lockScreen, tuning ->
                                 store.save(lockScreen)
                                 version++
-                                apply(lockScreen, tuning)
+                                apply(lockScreen, tuning) {
+                                    screen = Screen.Switcher(zoomIn = true)
+                                }
                             },
                         )
                     }
@@ -260,15 +264,29 @@ class LockScreenGalleryActivity : ComponentActivity() {
         return photos
     }
 
-    private fun apply(lockScreen: LockScreen, tuning: CustomClocks.Tuning? = null) {
+    /**
+     * Opened from the lock screen, applying goes back to it, as on iOS. Opened from the
+     * launcher, closing would look like a crash, so the switcher stays and says so instead.
+     */
+    private fun apply(lockScreen: LockScreen, tuning: CustomClocks.Tuning? = null,
+            onApplied: () -> Unit = {}) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 GalleryApplier.apply(this@LockScreenGalleryActivity, lockScreen)
             }
             applyClock(lockScreen.clock, tuning)
-            finish()
+            if (fromLockScreen) {
+                finish()
+            } else {
+                Toast.makeText(this@LockScreenGalleryActivity, R.string.gallery_applied,
+                    Toast.LENGTH_SHORT).show()
+                onApplied()
+            }
         }
     }
+
+    private val fromLockScreen: Boolean
+        get() = intent.action == ACTION_LOCK_SCREENS
 
     private suspend fun applyClock(style: ClockStyle, tuning: CustomClocks.Tuning?) {
         if (style.face == 0) applyStockClock(style)
@@ -314,6 +332,7 @@ class LockScreenGalleryActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_GALLERY = "gallery"
+        private const val ACTION_LOCK_SCREENS = "com.android.wallpaper.action.LOCK_SCREENS"
         private const val MAX_SHUFFLE = 30
         private const val FEATURED = 6
     }
