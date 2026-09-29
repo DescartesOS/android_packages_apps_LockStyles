@@ -97,10 +97,10 @@ object GalleryApplier {
         val enabled = Settings.System.getInt(resolver, DEPTH_ENABLED, 0) != 0
         if (!depth && !enabled) return
         try {
-            Settings.System.putInt(resolver, DEPTH_ENABLED, if (depth) 1 else 0)
-            if (depth && extract) {
-                requestSubject(context)
-            }
+            // Without a fresh subject, SystemUI would lift the last wallpaper's subject over this
+            // one, so depth only goes on once the extractor has taken the request.
+            val on = depth && (!extract || requestSubject(context))
+            Settings.System.putInt(resolver, DEPTH_ENABLED, if (on) 1 else 0)
         } catch (e: RuntimeException) {
             Log.w(TAG, "Could not change the depth effect", e)
         }
@@ -108,11 +108,19 @@ object GalleryApplier {
 
     /**
      * Singularity's extractor cuts the subject out of the lock screen wallpaper; with the auto
-     * subject on, it also follows later wallpaper changes, such as Photo Shuffle's.
+     * subject on, it also follows later wallpaper changes, such as Photo Shuffle's. False when
+     * the extractor can't be reached.
      */
-    private fun requestSubject(context: Context) {
+    private fun requestSubject(context: Context): Boolean {
+        try {
+            context.startService(Intent(ACTION_EXTRACT_DEPTH).setComponent(DEPTH_EXTRACTOR))
+                ?: return false
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Singularity's depth subject extractor is not available", e)
+            return false
+        }
         Settings.System.putInt(context.contentResolver, DEPTH_AUTO_SUBJECT, 1)
-        context.startService(Intent(ACTION_EXTRACT_DEPTH).setComponent(DEPTH_EXTRACTOR))
+        return true
     }
 
     /**
@@ -125,8 +133,8 @@ object GalleryApplier {
         try {
             WallpaperManager.getInstance(context).setBitmap(photo, null, true,
                 WallpaperManager.FLAG_LOCK)
+            if (!requestSubject(context)) return
             Settings.System.putInt(resolver, DEPTH_ENABLED, 1)
-            requestSubject(context)
         } catch (e: Exception) {
             Log.w(TAG, "Could not extract the depth subject", e)
             return
