@@ -8,6 +8,7 @@
 package org.lunaris.lockstyles.settings.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -211,8 +212,25 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
             switchRow(s(R.string.lockscreen_enable_power_menu_title),
                 s(R.string.lockscreen_enable_power_menu_summary), Keys.POWER_MENU),
         ))
+        group(s(R.string.credits_title), CREDITS.map { (name, role, url) ->
+            navRow(name, s(role)) {
+                runCatching {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+        })
     }
 }
+
+/** The people this app is built on. */
+private val CREDITS = listOf(
+    Triple("Ayan Biswas (not-ayan)", R.string.credits_wallwidgy,
+        "https://github.com/not-ayan/wallwidgy"),
+    Triple("Sushmit Rathore (redducc)", R.string.credits_gallery, "https://github.com/redducc"),
+    Triple("Ghosuto", R.string.credits_singularity, "https://github.com/Ghosuto"),
+    Triple("rmp22", R.string.credits_ax_blur, "https://github.com/rmp22"),
+)
 
 @Composable
 private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {

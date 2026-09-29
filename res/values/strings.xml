@@ -8,6 +8,11 @@
     <string name="lock_settings">Lock screen settings</string>
     <string name="apply_change">Apply</string>
     <string name="gallery_applied">Lock screen applied</string>
+    <string name="credits_title">Credits</string>
+    <string name="credits_wallwidgy">Wallpapers, from WallWidgy</string>
+    <string name="credits_gallery">The iOS style lock screen gallery, from PenguinOS</string>
+    <string name="credits_singularity">Lock screen settings, from Singularity</string>
+    <string name="credits_ax_blur">The glass blur material, from AxionOS\' ax_blur</string>
     <string name="clock_font_default">Default</string>
     <string name="depthwall_extract_unavailable">Settings\' subject extractor isn\'t available</string>
 </resources>
