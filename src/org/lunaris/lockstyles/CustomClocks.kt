@@ -32,7 +32,6 @@ object CustomClocks {
     private const val KEY_SIZE = "lock_screen_custom_clock_size_scale"
     private const val KEY_MARGIN_TOP = "lock_screen_custom_clock_margin_top"
     private const val KEY_OPACITY = "lock_screen_custom_clock_opacity"
-    private const val KEY_THEME_OVERLAYS = "theme_customization_overlay_packages"
     private const val CATEGORY_HIDE_CLOCK = "android.theme.customization.hideclock"
     private const val CATEGORY_SMARTSPACE = "android.theme.customization.smartspace"
     private const val OVERLAY_HIDE_CLOCK = "com.android.systemui.clocks.hideclock"
@@ -50,7 +49,6 @@ object CustomClocks {
     private const val COLOR_MODE_ACCENT = "accent"
     private const val PREVIEW_SHADOW = 0x59000000
     private const val CLOCK_UTILS = "org.lunaris.settings.fragments.lockscreen.ClockUtils"
-    private const val ACTION_RESTART = "com.android.systemui.action.RESTART_FOR_CLOCK_STYLE"
 
     /** Styles whose colours SystemUI never changes. */
     private val NO_COLOR = setOf(1, 2, 25, 26, 45)
@@ -323,7 +321,7 @@ object CustomClocks {
         if ((before == 0) != (style == 0)) {
             // Lunaris applies the stock clock's hideclock overlays through ThemeOverlayController;
             // the rest of the keyguard only reads the style at startup.
-            context.sendBroadcast(Intent(ACTION_RESTART).setPackage(SYSTEMUI))
+            org.lunaris.lockstyles.settings.Lunaris.restartSystemUI()
         }
     }
 
@@ -332,18 +330,9 @@ object CustomClocks {
      * smartspace through their theme overlays.
      */
     private fun setAospClockHidden(context: Context, hidden: Boolean) {
-        val resolver = context.contentResolver
-        val json = runCatching {
-            org.json.JSONObject(Settings.Secure.getString(resolver, KEY_THEME_OVERLAYS) ?: "{}")
-        }.getOrDefault(org.json.JSONObject())
-        if (hidden) {
-            json.put(CATEGORY_HIDE_CLOCK, OVERLAY_HIDE_CLOCK)
-            json.put(CATEGORY_SMARTSPACE, OVERLAY_HIDE_SMARTSPACE)
-        } else {
-            json.remove(CATEGORY_HIDE_CLOCK)
-            json.remove(CATEGORY_SMARTSPACE)
-        }
-        json.put("_applied_timestamp", System.currentTimeMillis())
-        Settings.Secure.putString(resolver, KEY_THEME_OVERLAYS, json.toString())
+        org.lunaris.lockstyles.settings.Lunaris.setOverlay(context, CATEGORY_HIDE_CLOCK,
+            if (hidden) OVERLAY_HIDE_CLOCK else "android", "android")
+        org.lunaris.lockstyles.settings.Lunaris.setOverlay(context, CATEGORY_SMARTSPACE,
+            if (hidden) OVERLAY_HIDE_SMARTSPACE else SYSTEMUI, SYSTEMUI)
     }
 }

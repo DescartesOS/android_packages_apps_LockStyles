@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Lock screen settings strings, moved from Singularity (packages/apps/Singularity).
+     SPDX-FileCopyrightText: 2016-2026 crDroid Android Project
+     SPDX-FileCopyrightText: 2023-2024 The risingOS Android Project
+     SPDX-FileCopyrightText: 2024-2026 Lunaris AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string-array name="lockscreen_custom_clock_color_mode_entries" translatable="false">
+        <item>@string/default_value</item>
+        <item>@string/accent_color</item>
+        <item>@string/custom_color</item>
+    </string-array>
+    <string-array name="lockscreen_custom_clock_color_mode_values" translatable="false">
+        <item>default</item>
+        <item>accent</item>
+        <item>custom</item>
+    </string-array>
+    <string-array name="lockscreen_media_art_filter_entries">
+        <item>None</item>
+        <item>Blur</item>
+        <item>Grayscale</item>
+        <item>Sepia</item>
+        <item>Custom tint</item>
+        <item>Invert</item>
+        <item>Grayscale + Blur</item>
+        <item>Pixelation/Mosaic effect</item>
+    </string-array>
+    <string-array name="lockscreen_media_art_filter_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="lockscreen_widgets_style_entries">
+        <item>@string/lockscreen_widgets_style1</item>
+        <item>@string/lockscreen_widgets_style2</item>
+        <item>@string/lockscreen_widgets_style3</item>
+        <item>@string/lockscreen_widgets_style4</item>
+        <item>@string/lockscreen_widgets_style5</item>
+        <item>@string/lockscreen_widgets_style6</item>
+    </string-array>
+    <string-array name="lockscreen_widgets_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="nowplaying_color_mode_entries" translatable="false">
+        <item>White</item>
+        <item>Accent color</item>
+        <item>Album art</item>
+    </string-array>
+    <string-array name="nowplaying_color_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="nowplaying_icon_style_entries">
+        <item>Disabled</item>
+        <item>App icon</item>
+        <item>Music note icon</item>
+    </string-array>
+    <string-array name="nowplaying_icon_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="pulse_bass_haptics_entries" translatable="false">
+        <item>@string/pulse_bass_haptics_none</item>
+        <item>@string/pulse_bass_haptics_running</item>
+        <item>@string/pulse_bass_haptics_always</item>
+    </string-array>
+    <string-array name="pulse_bass_haptics_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="pulse_capture_mode_entries" translatable="false">
+        <item>@string/pulse_capture_mode_fft</item>
+        <item>@string/pulse_capture_mode_amplitude</item>
+    </string-array>
+    <string-array name="pulse_capture_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="pulse_color_entries" translatable="false">
+        <item>@string/pulse_color_lavalamp</item>
+        <item>@string/pulse_color_album</item>
+        <item>@string/pulse_color_accent</item>
+        <item>@string/custom_color</item>
+    </string-array>
+    <string-array name="pulse_color_values" translatable="false">
+        <item>lavalamp</item>
+        <item>album</item>
+        <item>accent</item>
+        <item>custom</item>
+    </string-array>
+    <string-array name="pulse_renderer_entries" translatable="false">
+        <item>@string/pulse_renderer_solid</item>
+        <item>@string/pulse_renderer_fading</item>
+        <item>@string/pulse_renderer_neon_glow</item>
+        <item>@string/pulse_renderer_retro_vu_meter</item>
+        <item>@string/pulse_renderer_minimal_wave</item>
+        <item>@string/pulse_renderer_sparkle</item>
+        <item>@string/pulse_renderer_matrix</item>
+        <item>@string/pulse_renderer_particle</item>
+        <item>@string/pulse_renderer_waveform</item>
+        <item>@string/pulse_renderer_dot_wave</item>
+    </string-array>
+    <string-array name="pulse_renderer_values" translatable="false">
+        <item>solid</item>
+        <item>fading</item>
+        <item>neon</item>
+        <item>retro</item>
+        <item>minimal</item>
+        <item>sparkle</item>
+        <item>matrix</item>
+        <item>particle</item>
+        <item>waveform</item>
+        <item>dotwave</item>
+    </string-array>
+    <string-array name="udfps_icon_type_entries">
+        <item>Prebuilt icons</item>
+        <item>Custom icon</item>
+    </string-array>
+    <string-array name="udfps_icon_type_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="widget_entries">
+        <item>@string/status_bar_date_none</item>
+     	<item>@string/calculator</item>
+     	<item>@string/media</item>
+     	<item>@string/clock_timer</item>
+        <item>@string/torch</item>
+        <item>@string/weather</item>
+        <item>@string/wifi</item>
+        <item>@string/data</item>
+        <item>@string/ringer</item>
+        <item>@string/bt</item>
+        <item>@string/hotspot</item>
+        <item>@string/wallet</item>
+        <item>@string/qr_scanner</item>
+    </string-array>
+    <string-array name="widget_values">
+     	<item>none</item>
+     	<item>calculator</item>
+     	<item>media</item>
+     	<item>timer</item>
+        <item>torch</item>
+        <item>weather</item>
+        <item>wifi</item>
+        <item>data</item>
+        <item>ringer</item>
+        <item>bt</item>
+        <item>hotspot</item>
+        <item>wallet</item>
+        <item>qrscanner</item>
+    </string-array>
+    <string name="accent_color">Accent color</string>
+    <string name="aod_brightness_title">AOD brightness</string>
+    <string name="bt">Bluetooth</string>
+    <string name="calculator">Calculator</string>
+    <string name="clock_album_art_color_summary">Override clock color with the album art palette when media is playing</string>
+    <string name="clock_album_art_color_title">Album art color clocks</string>
+    <string name="clock_size_summary">Scale the lockscreen clock (50–150%)</string>
+    <string name="clock_size_title">Clock size</string>
+    <string name="clock_timer">Clock/Timer</string>
+    <string name="custom_clock_weather_summary">Show weather on custom lockscreen clock</string>
+    <string name="custom_clock_weather_title">Lockscreen weather</string>
+    <string name="custom_color">Custom color</string>
+    <string name="custom_color_summary">Custom color some clock styles</string>
+    <string name="custom_widgets1">Mini widget 1</string>
+    <string name="custom_widgets2">Mini widget 2</string>
+    <string name="custom_widgets3">Mini widget 3</string>
+    <string name="custom_widgets4">Mini widget 4</string>
+    <string name="data">Data</string>
+    <string name="default_value">Default</string>
+    <string name="depth_wallpaper_bottom_fade_summary">Fade out the wallpaper at the bottom</string>
+    <string name="depth_wallpaper_bottom_fade_title">Bottom fade</string>
+    <string name="depth_wallpaper_bottom_inset_summary">Adjust the inset of the wallpaper at the bottom</string>
+    <string name="depth_wallpaper_bottom_inset_title">Bottom inset</string>
+    <string name="depth_wallpaper_fade_curve_summary">Adjust the fade curve of the wallpaper</string>
+    <string name="depth_wallpaper_fade_curve_title">Fade curve</string>
+    <string name="depthwall_auto_subject_summary">Automatically extract subject from wallpaper for depth effect</string>
+    <string name="depthwall_auto_subject_title">Depth wallpaper auto subject</string>
+    <string name="depthwall_clear_subject_summary">Remove the current extracted or manually set subject</string>
+    <string name="depthwall_clear_subject_title">Clear subject image</string>
+    <string name="depthwall_extract_now_summary">Trigger subject extraction from wallpaper immediately (Set wallpaper separatly for lockscreen)</string>
+    <string name="depthwall_extract_now_title">Extract subject now</string>
+    <string name="depthwall_file_header_select_summary">Select depth wallpaper subject image from storage.</string>
+    <string name="depthwall_file_header_select_title">Select Depth wallpaper subject</string>
+    <string name="depthwall_footer_text">
+        The depth wallpaper feature, inspired by iOS\'s Wallpaper Subject Segmentation, enables overlaying of a subject above the lockscreen clock to show a wallpaper depth effect.\n\nTo setup Depth Wallpaper Feature:\n1. Set a wallpaper with the subject or a background you want the subject to be above of.\n2. Select a subject image to track, this image will be overlaid above the lockscreen clock.\n3. Modify the offsets and opacity according to your needs.
+    </string>
+    <string name="depthwall_wallpaper_enabled_summary">Enable iOS-inspired depth wallpaper. Requires a subject image.</string>
+    <string name="depthwall_wallpaper_enabled_title">Depth wallpaper</string>
+    <string name="depthwall_wallpaper_opacity_title">Depth wallpaper opacity</string>
+    <string name="dynamic_bar_keyguard_music_pill">Music pill on lock screen</string>
+    <string name="dynamic_bar_keyguard_music_pill_summary">Show music player as a pill on the lock screen</string>
+    <string name="enable">Enable</string>
+    <string name="enable_fingerprint_ripple_effect_summary">Show ripple effect on unlock with fingerprint</string>
+    <string name="enable_fingerprint_ripple_effect_title">Ripple effect</string>
+    <string name="fp_error_vibrate_summary">Vibrate when fingerprint authentication fails</string>
+    <string name="fp_error_vibrate_title">Fingerprint error vibration</string>
+    <string name="fp_success_vibrate_summary">Vibrate when fingerprint authentication is successful</string>
+    <string name="fp_success_vibrate_title">Fingerprint authentication vibration</string>
+    <string name="gestures_title">Gestures</string>
+    <string name="hotspot">Hotspot</string>
+    <string name="keyguard_affordance_single_tap_summary">Toggle keyguard affordances with a single tap</string>
+    <string name="keyguard_affordance_single_tap_title">Keyguard affordance single tap</string>
+    <string name="keyguard_scrim_transparent_summary">Hide the lockscreen wallpaper dimming layer</string>
+    <string name="keyguard_scrim_transparent_title">Transparent lockscreen scrim</string>
+    <string name="kg_user_switcher_enabled_summary">Show user switcher when showing pin/password prompt</string>
+    <string name="kg_user_switcher_enabled_title">User Switcher</string>
+    <string name="lock_screen_custom_clock_wobble_on_charge_summary">Show wobble effect on clock when connected to charger</string>
+    <string name="lock_screen_custom_clock_wobble_on_charge_title">Wobble charging effect</string>
+    <string name="lock_screen_title">Lock screen</string>
+    <string name="lockscreen_battery_info_summary">Display battery info when charging</string>
+    <string name="lockscreen_battery_info_title">Battery info</string>
+    <string name="lockscreen_charging_time_summary">Display the remaining time for charging to finish</string>
+    <string name="lockscreen_charging_time_title">Lockscreen charging time</string>
+    <string name="lockscreen_custom_clock_animation_category_title">Animation</string>
+    <string name="lockscreen_custom_clock_aod_anim_summary">Set AOD animation for custom clock style</string>
+    <string name="lockscreen_custom_clock_aod_anim_title">Custom clock AOD animation</string>
+    <string name="lockscreen_custom_clock_color_category_title">Color</string>
+    <string name="lockscreen_custom_clock_color_mode_title">Custom clock color mode</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_summary">Adjust the width of custom clock style</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_title">Custom clock width</string>
+    <string name="lockscreen_custom_clock_frame_margin_top_summary">Adjust the height of custom clock style</string>
+    <string name="lockscreen_custom_clock_frame_margin_top_title">Custom clock height</string>
+    <string name="lockscreen_custom_clock_gradient_anchor_y_summary">Control where the gradient is vertically centered</string>
+    <string name="lockscreen_custom_clock_gradient_anchor_y_title">Gradient anchor</string>
+    <string name="lockscreen_custom_clock_gradient_category_title">Gradient</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_summary">Apply a two-color gradient to clock text instead of a flat color. Override other color mode</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_title">Gradient text</string>
+    <string name="lockscreen_custom_clock_gradient_end_title">Gradient end color</string>
+    <string name="lockscreen_custom_clock_gradient_radius_summary">Control how far the gradient spreads from its anchor point</string>
+    <string name="lockscreen_custom_clock_gradient_radius_title">Gradient spread</string>
+    <string name="lockscreen_custom_clock_gradient_start_title">Gradient start color</string>
+    <string name="lockscreen_custom_clock_layout_category_title">Size &amp; position</string>
+    <string name="lockscreen_custom_clock_opacity_summary">Adjust the transparency of custom clock style</string>
+    <string name="lockscreen_custom_clock_opacity_title">Custom clock opacity</string>
+    <string name="lockscreen_custom_clock_style_info">Custom clock style replaces AOSP clock styles with custom clocks. Smartspace will be disabled. You can enable and use custom weather instead.</string>
+    <string name="lockscreen_custom_clock_style_summary">Configure lock screen clock styles</string>
+    <string name="lockscreen_custom_clock_style_title">Custom clock style</string>
+    <string name="lockscreen_custom_image_enabled_title">AOD avater image</string>
+    <string name="lockscreen_custom_image_pick_summary">Select AOD image from gallery</string>
+    <string name="lockscreen_custom_image_summary">Set custom AOD image</string>
+    <string name="lockscreen_custom_image_title">Select AOD image</string>
+    <string name="lockscreen_display_widgets_summary">Show device info widget on lockscreen</string>
+    <string name="lockscreen_display_widgets_title">Device info Widget</string>
+    <string name="lockscreen_doubletap_sleep_summary">Double-tap on the lock screen to put device asleep</string>
+    <string name="lockscreen_doubletap_sleep_title">Tap to sleep</string>
+    <string name="lockscreen_emergency_button_summary">Display emergency call button on lockscreen</string>
+    <string name="lockscreen_emergency_button_title">Show emergency button</string>
+    <string name="lockscreen_enable_power_menu_summary">Allow accessing power menu on secure lockscreen</string>
+    <string name="lockscreen_enable_power_menu_title">Power menu</string>
+    <string name="lockscreen_interface_category">Interface</string>
+    <string name="lockscreen_media_art_blur_level_summary">Blur intensity when blur filter is applied</string>
+    <string name="lockscreen_media_art_blur_level_title">Media art blur level</string>
+    <string name="lockscreen_media_art_fade_level_summary">Darkness overlay for better text readability</string>
+    <string name="lockscreen_media_art_fade_level_title">Media art fade level</string>
+    <string name="lockscreen_media_art_filter_summary">Choose visual filter for media art</string>
+    <string name="lockscreen_media_art_filter_title">Media art filter</string>
+    <string name="lockscreen_media_art_pixel_size_summary">Adjust the pixel size for media artwork displayed on the lock screen</string>
+    <string name="lockscreen_media_art_pixel_size_title">Media art pixel size</string>
+    <string name="lockscreen_smartspace_summary">Show Google Smartspace when available</string>
+    <string name="lockscreen_smartspace_title">Smartspace</string>
+    <string name="lockscreen_weather_category">Weather</string>
+    <string name="lockscreen_weather_humidity_info_summary">Display current humidity in percentage</string>
+    <string name="lockscreen_weather_humidity_info_title">Humidity info</string>
+    <string name="lockscreen_weather_location_summary">Display current weather location</string>
+    <string name="lockscreen_weather_location_title">Current location</string>
+    <string name="lockscreen_weather_summary">Display current weather update</string>
+    <string name="lockscreen_weather_text_summary">Display current weather condition summary</string>
+    <string name="lockscreen_weather_text_title">Current condition</string>
+    <string name="lockscreen_weather_title">Weather update</string>
+    <string name="lockscreen_weather_wind_info_summary">Display current wind speed and direction</string>
+    <string name="lockscreen_weather_wind_info_title">Wind info</string>
+    <string name="lockscreen_widgets_color_mode_title">Info Widget color mode</string>
+    <string name="lockscreen_widgets_enabled_summary">Add widgets to lockscreen</string>
+    <string name="lockscreen_widgets_enabled_title">Enable Lockscreen Widgets</string>
+    <string name="lockscreen_widgets_style1">Material Rounded</string>
+    <string name="lockscreen_widgets_style2">Material Square</string>
+    <string name="lockscreen_widgets_style3">Square Translucent</string>
+    <string name="lockscreen_widgets_style4">Rounded Translucent</string>
+    <string name="lockscreen_widgets_style5">Square blur</string>
+    <string name="lockscreen_widgets_style6">Rounded blur</string>
+    <string name="lockscreen_widgets_style_title">Lockscreen widgets style</string>
+    <string name="lockscreen_widgets_title">Widgets</string>
+    <string name="lockscreen_widgets_transparency_summary">Configure translucent style widget opacity level</string>
+    <string name="lockscreen_widgets_transparency_title">Translucent style transparency</string>
+    <string name="ls_clock_summary">Set your clock style and widgets</string>
+    <string name="ls_clock_title">Lockscreen Clocks</string>
+    <string name="ls_media_art_summary">Display media cover art when available</string>
+    <string name="ls_media_art_title">Media cover art</string>
+    <string name="main_custom_widgets1">Big widget 1</string>
+    <string name="main_custom_widgets2">Big widget 2</string>
+    <string name="media">Media Player</string>
+    <string name="misc_title">Miscellaneous</string>
+    <string name="nowplaying_artist_text_size_summary">Size of the artist/album name text</string>
+    <string name="nowplaying_artist_text_size_title">Artist name size</string>
+    <string name="nowplaying_color_mode_title">Text color mode</string>
+    <string name="nowplaying_compact_style_summary">Show as on a single line using the track text size</string>
+    <string name="nowplaying_compact_style_title">Compact style</string>
+    <string name="nowplaying_display_title">Display options</string>
+    <string name="nowplaying_expand_dialog">Expand dialog</string>
+    <string name="nowplaying_expand_dialog_summary">Expand Now Playing dialog</string>
+    <string name="nowplaying_icon_size_summary">Adjust the icon size</string>
+    <string name="nowplaying_icon_size_title">Icon size</string>
+    <string name="nowplaying_icon_style_summary">Choose which icon to display</string>
+    <string name="nowplaying_icon_style_title">Icon style</string>
+    <string name="nowplaying_info_summary">Now Playing displays the currently playing music title and artist on your lockscreen and Always-On Display. It automatically appears when music is playing and disappears when stopped. The position can be adjusted to appear anywhere from the top to bottom of the screen.</string>
+    <string name="nowplaying_lyrics_mode_summary">Show synced lyrics instead of track title and icon</string>
+    <string name="nowplaying_lyrics_mode_title">Lyrics mode</string>
+    <string name="nowplaying_show_on_aod_summary">Display music info on ambient display</string>
+    <string name="nowplaying_show_on_aod_title">Show on Always-On Display</string>
+    <string name="nowplaying_show_on_lockscreen_summary">Display music info when device is locked</string>
+    <string name="nowplaying_show_on_lockscreen_title">Show on lockscreen</string>
+    <string name="nowplaying_summary">Show currently playing music info on lockscreen and AOD</string>
+    <string name="nowplaying_title">Now Playing</string>
+    <string name="nowplaying_track_text_size_summary">Size of the track title text</string>
+    <string name="nowplaying_track_text_size_title">Track title size</string>
+    <string name="nowplaying_vertical_position_summary">Adjust position from top to bottom of screen</string>
+    <string name="nowplaying_vertical_position_title">top padding</string>
+    <string name="pulse_bar_count_summary">Set how many bars are shown in the visualizer</string>
+    <string name="pulse_bar_count_title">Number of bars</string>
+    <string name="pulse_bar_count_units">bars</string>
+    <string name="pulse_bass_haptics_always">Whenever media playback is active</string>
+    <string name="pulse_bass_haptics_none">No subtle vibration on sharp bass spikes</string>
+    <string name="pulse_bass_haptics_running">Only when pulse is showing</string>
+    <string name="pulse_bass_haptics_title">Bass haptics</string>
+    <string name="pulse_capture_mode_amplitude">Amplitude (Waveform)</string>
+    <string name="pulse_capture_mode_fft">FFT (Frequency)</string>
+    <string name="pulse_capture_mode_title">Audio capture mode</string>
+    <string name="pulse_color">Visualizer color</string>
+    <string name="pulse_color_accent">Accent color</string>
+    <string name="pulse_color_album">Album art</string>
+    <string name="pulse_color_lavalamp">Lavalamp</string>
+    <string name="pulse_height_multiplier_summary">Adjust the visualization height</string>
+    <string name="pulse_height_multiplier_title">Pulse height</string>
+    <string name="pulse_renderer">Visualizer style</string>
+    <string name="pulse_renderer_dot_wave">Dot wave</string>
+    <string name="pulse_renderer_fading">Fading blocks</string>
+    <string name="pulse_renderer_matrix">Matrix</string>
+    <string name="pulse_renderer_minimal_wave">Minimal wave</string>
+    <string name="pulse_renderer_neon_glow">Neon glow</string>
+    <string name="pulse_renderer_particle">Particle</string>
+    <string name="pulse_renderer_retro_vu_meter">Retro VU meter</string>
+    <string name="pulse_renderer_solid">Solid lines</string>
+    <string name="pulse_renderer_sparkle">Sparkle</string>
+    <string name="pulse_renderer_waveform">Waveform</string>
+    <string name="pulse_rounded_bars_summary">Display visualizer bars with rounded corners</string>
+    <string name="pulse_rounded_bars_title">Rounded bars</string>
+    <string name="pulse_settings_summary">Show a bar visualizer on the lock screen while music is playing</string>
+    <string name="pulse_settings_title">Pulse Visualizer</string>
+    <string name="pulse_show_on_ambient_summary">Display visualizer on always-on display and ambient mode. Disable to show only on lockscreen.</string>
+    <string name="pulse_show_on_ambient_title">Show on ambient display</string>
+    <string name="qr_scanner">QR Scanner</string>
+    <string name="qs_clock_title">Clock</string>
+    <string name="ringer">Ringer</string>
+    <string name="show_on_aod_summary">Display media artwork on Always-On Display</string>
+    <string name="show_on_aod_title">Show on AOD</string>
+    <string name="status_bar_date_none">Hidden</string>
+    <string name="theme_customization_lock_clock_title">Clock face</string>
+    <string name="torch">Torch</string>
+    <string name="udfps_animation_offset_summary">Adjust the vertical position of fingerprint animation</string>
+    <string name="udfps_animation_offset_title">UDFPS animation offset</string>
+    <string name="udfps_animation_size_summary">Adjust the size of fingerprint animation</string>
+    <string name="udfps_animation_size_title">UDFPS animation size</string>
+    <string name="udfps_cust_summary">Customize fingerprint icon and animation</string>
+    <string name="udfps_cust_title">UDFPS icon and animation</string>
+    <string name="udfps_custom_footer_text">Set any custom icon in prebuilt icon before switching or applying custom icon\'s After restart device restart systemui once it will fix invisible/blank custom icon issue </string>
+    <string name="udfps_custom_icon_select_summary">Choose an image from gallery</string>
+    <string name="udfps_custom_icon_select_title">Select custom icon</string>
+    <string name="udfps_custom_title">UDFPS customization</string>
+    <string name="udfps_icon_aod_summary">Use custom UDFPS icon on Always-On Display</string>
+    <string name="udfps_icon_aod_title">UDFPS icon AOD</string>
+    <string name="udfps_icon_picker_summary">Choose your favorite fingerprint icon</string>
+    <string name="udfps_icon_picker_title">UDFPS prebuilt icon</string>
+    <string name="udfps_icon_type_title">Icon type</string>
+    <string name="udfps_recog_animation_effect_summary">Choose animation effect</string>
+    <string name="udfps_recog_animation_effect_title">UDFPS custom animation</string>
+    <string name="unit_pixels" translatable="false">dp</string>
+    <string name="wallet">Wallet</string>
+    <string name="weather">Weather</string>
+    <string name="weather_settings_summary">Setup icon pack and weather service</string>
+    <string name="weather_settings_title">Weather settings</string>
+    <string name="wifi">Wifi</string>
+    <string name="lockscreen_weather_enabled_info">Requires custom weather service configured and smartspace disabled</string>
+    <string name="systemui_restart_title">SystemUI restart required</string>
+    <string name="systemui_restart_message">For changes to take effect, a SystemUI restart is required. Restart SystemUI now?</string>
+    <string name="systemui_restart_yes">Yes</string>
+    <string name="systemui_restart_not_now">Not now</string>
+    <string name="udfps_custom_icon_selected">Custom icon applied</string>
+    <string name="depthwall_clear_subject_confirm_message">This will remove the current depth wallpaper subject image. Continue?</string>
+    <string name="systemui_restart_process">Restarting SystemUI to apply changes...</string>
+</resources>

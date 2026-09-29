@@ -3,6 +3,7 @@ package org.lunaris.lockstyles.ui
 import android.Manifest
 import android.app.WallpaperManager
 import android.content.ContentUris
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -43,6 +44,7 @@ import org.lunaris.lockstyles.GalleryWallpaper.Kind
 import org.lunaris.lockstyles.LockScreen
 import org.lunaris.lockstyles.Shortcuts
 import org.lunaris.lockstyles.StockClock
+import org.lunaris.lockstyles.settings.ui.LockSettingsActivity
 import java.io.File
 import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
@@ -164,6 +166,10 @@ class LockScreenGalleryActivity : ComponentActivity() {
                             onDelete = {
                                 store.delete(it.id)
                                 version++
+                            },
+                            onSettings = {
+                                startActivity(Intent(this@LockScreenGalleryActivity,
+                                    LockSettingsActivity::class.java))
                             },
                         )
                         Screen.Gallery -> GalleryScreen(

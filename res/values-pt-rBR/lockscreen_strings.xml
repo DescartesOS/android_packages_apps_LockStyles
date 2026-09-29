@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Lock screen settings strings, moved from Singularity (packages/apps/Singularity).
+     SPDX-FileCopyrightText: 2016-2026 crDroid Android Project
+     SPDX-FileCopyrightText: 2023-2024 The risingOS Android Project
+     SPDX-FileCopyrightText: 2024-2026 Lunaris AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string-array name="lockscreen_custom_clock_color_mode_entries" translatable="false">
+        <item>@string/default_value</item>
+        <item>@string/accent_color</item>
+        <item>@string/custom_color</item>
+    </string-array>
+    <string-array name="lockscreen_custom_clock_color_mode_values" translatable="false">
+        <item>default</item>
+        <item>accent</item>
+        <item>custom</item>
+    </string-array>
+    <string-array name="lockscreen_media_art_filter_entries">
+        <item>Nenhum</item>
+        <item>Desfoque</item>
+        <item>Escala de cinza</item>
+        <item>Sépia</item>
+        <item>Tonalidade personalizada</item>
+        <item>Inverter</item>
+        <item>Escala de cinza + Desfoque</item>
+        <item>Efeito de pixelização/mosaico</item>
+    </string-array>
+    <string-array name="lockscreen_media_art_filter_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="lockscreen_widgets_style_entries">
+        <item>@string/lockscreen_widgets_style1</item>
+        <item>@string/lockscreen_widgets_style2</item>
+        <item>@string/lockscreen_widgets_style3</item>
+        <item>@string/lockscreen_widgets_style4</item>
+        <item>@string/lockscreen_widgets_style5</item>
+        <item>@string/lockscreen_widgets_style6</item>
+    </string-array>
+    <string-array name="lockscreen_widgets_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="nowplaying_color_mode_entries" translatable="false">
+        <item>White</item>
+        <item>Accent color</item>
+        <item>Album art</item>
+    </string-array>
+    <string-array name="nowplaying_color_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="nowplaying_icon_style_entries">
+        <item>Desativado</item>
+        <item>Ícone do app</item>
+        <item>Ícone de nota musical</item>
+    </string-array>
+    <string-array name="nowplaying_icon_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="pulse_bass_haptics_entries" translatable="false">
+        <item>@string/pulse_bass_haptics_none</item>
+        <item>@string/pulse_bass_haptics_running</item>
+        <item>@string/pulse_bass_haptics_always</item>
+    </string-array>
+    <string-array name="pulse_bass_haptics_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="pulse_capture_mode_entries" translatable="false">
+        <item>@string/pulse_capture_mode_fft</item>
+        <item>@string/pulse_capture_mode_amplitude</item>
+    </string-array>
+    <string-array name="pulse_capture_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="pulse_color_entries" translatable="false">
+        <item>@string/pulse_color_lavalamp</item>
+        <item>@string/pulse_color_album</item>
+        <item>@string/pulse_color_accent</item>
+        <item>@string/custom_color</item>
+    </string-array>
+    <string-array name="pulse_color_values" translatable="false">
+        <item>lavalamp</item>
+        <item>album</item>
+        <item>accent</item>
+        <item>custom</item>
+    </string-array>
+    <string-array name="pulse_renderer_entries" translatable="false">
+        <item>@string/pulse_renderer_solid</item>
+        <item>@string/pulse_renderer_fading</item>
+        <item>@string/pulse_renderer_neon_glow</item>
+        <item>@string/pulse_renderer_retro_vu_meter</item>
+        <item>@string/pulse_renderer_minimal_wave</item>
+        <item>@string/pulse_renderer_sparkle</item>
+        <item>@string/pulse_renderer_matrix</item>
+        <item>@string/pulse_renderer_particle</item>
+        <item>@string/pulse_renderer_waveform</item>
+        <item>@string/pulse_renderer_dot_wave</item>
+    </string-array>
+    <string-array name="pulse_renderer_values" translatable="false">
+        <item>solid</item>
+        <item>fading</item>
+        <item>neon</item>
+        <item>retro</item>
+        <item>minimal</item>
+        <item>sparkle</item>
+        <item>matrix</item>
+        <item>particle</item>
+        <item>waveform</item>
+        <item>dotwave</item>
+    </string-array>
+    <string-array name="udfps_icon_type_entries">
+        <item>Ícones pré-instalados</item>
+        <item>Ícone personalizado</item>
+    </string-array>
+    <string-array name="udfps_icon_type_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="widget_entries">
+        <item>@string/status_bar_date_none</item>
+     	<item>@string/calculator</item>
+     	<item>@string/media</item>
+     	<item>@string/clock_timer</item>
+        <item>@string/torch</item>
+        <item>@string/weather</item>
+        <item>@string/wifi</item>
+        <item>@string/data</item>
+        <item>@string/ringer</item>
+        <item>@string/bt</item>
+        <item>@string/hotspot</item>
+        <item>@string/wallet</item>
+        <item>@string/qr_scanner</item>
+    </string-array>
+    <string-array name="widget_values">
+     	<item>none</item>
+     	<item>calculator</item>
+     	<item>media</item>
+     	<item>timer</item>
+        <item>torch</item>
+        <item>weather</item>
+        <item>wifi</item>
+        <item>data</item>
+        <item>ringer</item>
+        <item>bt</item>
+        <item>hotspot</item>
+        <item>wallet</item>
+        <item>qrscanner</item>
+    </string-array>
+    <string name="accent_color">Cor de destaque</string>
+    <string name="aod_brightness_title">Brilho da Tela Sempre Ativa</string>
+    <string name="bt">Bluetooth</string>
+    <string name="calculator">Calculadora</string>
+    <string name="clock_album_art_color_summary">Substituir a cor do relógio pela paleta da capa do álbum quando a mídia estiver tocando</string>
+    <string name="clock_album_art_color_title">Cor da capa do álbum nos relógios</string>
+    <string name="clock_size_summary">Redimensionar o relógio da tela de bloqueio (50–150%)</string>
+    <string name="clock_size_title">Tamanho do relógio</string>
+    <string name="clock_timer">Relógio/Timer</string>
+    <string name="custom_clock_weather_summary">Mostrar o clima no relógio personalizado da tela de bloqueio</string>
+    <string name="custom_clock_weather_title">Clima na tela de bloqueio</string>
+    <string name="custom_color">Cor personalizada</string>
+    <string name="custom_color_summary">Cor personalizada para alguns estilos de relógio</string>
+    <string name="custom_widgets1">Miniwidget 1</string>
+    <string name="custom_widgets2">Miniwidget 2</string>
+    <string name="custom_widgets3">Miniwidget 3</string>
+    <string name="custom_widgets4">Miniwidget 4</string>
+    <string name="data">Dados</string>
+    <string name="default_value">Padrão</string>
+    <string name="depth_wallpaper_bottom_fade_summary">Esmaecer o papel de parede na parte inferior</string>
+    <string name="depth_wallpaper_bottom_fade_title">Esmaecimento inferior</string>
+    <string name="depth_wallpaper_bottom_inset_summary">Ajustar o recuo do papel de parede na parte inferior</string>
+    <string name="depth_wallpaper_bottom_inset_title">Recuo inferior</string>
+    <string name="depth_wallpaper_fade_curve_summary">Ajustar a curva de esmaecimento do papel de parede</string>
+    <string name="depth_wallpaper_fade_curve_title">Curva de esmaecimento</string>
+    <string name="depthwall_auto_subject_summary">Extrair automaticamente o assunto do papel de parede para o efeito de profundidade</string>
+    <string name="depthwall_auto_subject_title">Assunto automático do papel de parede de profundidade</string>
+    <string name="depthwall_clear_subject_summary">Remover o assunto atualmente extraído ou definido manualmente</string>
+    <string name="depthwall_clear_subject_title">Limpar imagem do assunto</string>
+    <string name="depthwall_extract_now_summary">Acionar a extração do assunto do papel de parede imediatamente (defina o papel de parede separadamente para a tela de bloqueio)</string>
+    <string name="depthwall_extract_now_title">Extrair assunto agora</string>
+    <string name="depthwall_file_header_select_summary">Selecionar imagem do assunto do papel de parede de profundidade no armazenamento.</string>
+    <string name="depthwall_file_header_select_title">Selecionar assunto do papel de parede de profundidade</string>
+    <string name="depthwall_footer_text">
+        O recurso de papel de parede de profundidade, inspirado na Segmentação de Assunto de Papel de Parede do iOS, permite sobrepor um assunto acima do relógio da tela de bloqueio para mostrar um efeito de profundidade no papel de parede.\n\nPara configurar o recurso de Papel de Parede de Profundidade:\n1. Defina um papel de parede com o assunto ou um fundo sobre o qual você deseja que o assunto fique.\n2. Selecione uma imagem de assunto para rastrear; essa imagem será sobreposta acima do relógio da tela de bloqueio.\n3. Ajuste os deslocamentos e a opacidade de acordo com suas necessidades.
+    </string>
+    <string name="depthwall_wallpaper_enabled_summary">Ativar o papel de parede de profundidade inspirado no iOS. Requer uma imagem de assunto.</string>
+    <string name="depthwall_wallpaper_enabled_title">Papel de parede de profundidade</string>
+    <string name="depthwall_wallpaper_opacity_title">Opacidade do papel de parede de profundidade</string>
+    <string name="dynamic_bar_keyguard_music_pill">Pílula de música na tela de bloqueio</string>
+    <string name="dynamic_bar_keyguard_music_pill_summary">Mostrar o reprodutor de música como uma pílula na tela de bloqueio</string>
+    <string name="enable">Ativar</string>
+    <string name="enable_fingerprint_ripple_effect_summary">Mostrar efeito de ondulação ao desbloquear com a digital</string>
+    <string name="enable_fingerprint_ripple_effect_title">Efeito de ondulação</string>
+    <string name="fp_error_vibrate_summary">Vibrar quando a autenticação por digital falhar</string>
+    <string name="fp_error_vibrate_title">Vibração de erro de digital</string>
+    <string name="fp_success_vibrate_summary">Vibrar quando a autenticação por digital for bem-sucedida</string>
+    <string name="fp_success_vibrate_title">Vibração de autenticação por digital</string>
+    <string name="gestures_title">Gestos</string>
+    <string name="hotspot">Hotspot</string>
+    <string name="keyguard_affordance_single_tap_summary">Alternar os atalhos da tela de bloqueio com um único toque</string>
+    <string name="keyguard_affordance_single_tap_title">Toque único nos atalhos da tela de bloqueio</string>
+    <string name="keyguard_scrim_transparent_summary">Ocultar a camada de escurecimento do papel de parede na tela de bloqueio</string>
+    <string name="keyguard_scrim_transparent_title">Camada de sombreamento transparente na tela de bloqueio</string>
+    <string name="kg_user_switcher_enabled_summary">Mostrar o alternador de usuário ao exibir o prompt de PIN/senha</string>
+    <string name="kg_user_switcher_enabled_title">Alternador de usuário</string>
+    <string name="lock_screen_custom_clock_wobble_on_charge_summary">Mostrar efeito de oscilação no relógio quando conectado ao carregador</string>
+    <string name="lock_screen_custom_clock_wobble_on_charge_title">Efeito de oscilação ao carregar</string>
+    <string name="lock_screen_title">Tela de bloqueio</string>
+    <string name="lockscreen_battery_info_summary">Exibir informações da bateria durante o carregamento</string>
+    <string name="lockscreen_battery_info_title">Informações da bateria</string>
+    <string name="lockscreen_charging_time_summary">Exibir o tempo restante para o carregamento terminar</string>
+    <string name="lockscreen_charging_time_title">Tempo de carregamento na tela de bloqueio</string>
+    <string name="lockscreen_custom_clock_animation_category_title">Animação</string>
+    <string name="lockscreen_custom_clock_aod_anim_summary">Definir a animação AOD para o estilo de relógio personalizado</string>
+    <string name="lockscreen_custom_clock_aod_anim_title">Animação AOD do relógio personalizado</string>
+    <string name="lockscreen_custom_clock_color_category_title">Cor</string>
+    <string name="lockscreen_custom_clock_color_mode_title">Modo de cor do relógio personalizado</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_summary">Ajustar a largura do estilo de relógio personalizado</string>
+    <string name="lockscreen_custom_clock_frame_margin_start_title">Largura do relógio personalizado</string>
+    <string name="lockscreen_custom_clock_frame_margin_top_summary">Ajustar a altura do estilo de relógio personalizado</string>
+    <string name="lockscreen_custom_clock_frame_margin_top_title">Altura do relógio personalizado</string>
+    <string name="lockscreen_custom_clock_gradient_anchor_y_summary">Controlar onde o gradiente é centralizado verticalmente</string>
+    <string name="lockscreen_custom_clock_gradient_anchor_y_title">Âncora do gradiente</string>
+    <string name="lockscreen_custom_clock_gradient_category_title">Gradiente</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_summary">Aplicar um gradiente de duas cores ao texto do relógio em vez de uma cor sólida. Substitui outro modo de cor</string>
+    <string name="lockscreen_custom_clock_gradient_enabled_title">Texto em gradiente</string>
+    <string name="lockscreen_custom_clock_gradient_end_title">Cor final do gradiente</string>
+    <string name="lockscreen_custom_clock_gradient_radius_summary">Controlar até onde o gradiente se espalha a partir do ponto de âncora</string>
+    <string name="lockscreen_custom_clock_gradient_radius_title">Espalhamento do gradiente</string>
+    <string name="lockscreen_custom_clock_gradient_start_title">Cor inicial do gradiente</string>
+    <string name="lockscreen_custom_clock_layout_category_title">Tamanho &amp; posição</string>
+    <string name="lockscreen_custom_clock_opacity_summary">Ajustar a transparência do estilo de relógio personalizado</string>
+    <string name="lockscreen_custom_clock_opacity_title">Opacidade do relógio personalizado</string>
+    <string name="lockscreen_custom_clock_style_info">O estilo de relógio personalizado substitui os estilos de relógio AOSP por relógios personalizados. O Smartspace será desativado. Você pode ativar e usar o clima personalizado em seu lugar.</string>
+    <string name="lockscreen_custom_clock_style_summary">Configurar os estilos de relógio da tela de bloqueio</string>
+    <string name="lockscreen_custom_clock_style_title">Estilo de relógio personalizado</string>
+    <string name="lockscreen_custom_image_enabled_title">Imagem de avatar da AOD</string>
+    <string name="lockscreen_custom_image_pick_summary">Selecionar imagem da AOD na galeria</string>
+    <string name="lockscreen_custom_image_summary">Definir imagem personalizada da AOD</string>
+    <string name="lockscreen_custom_image_title">Selecionar imagem da AOD</string>
+    <string name="lockscreen_display_widgets_summary">Mostrar o widget de informações do dispositivo na tela de bloqueio</string>
+    <string name="lockscreen_display_widgets_title">Widget de informações do dispositivo</string>
+    <string name="lockscreen_doubletap_sleep_summary">Toque duas vezes na tela de bloqueio para colocar o dispositivo em espera</string>
+    <string name="lockscreen_doubletap_sleep_title">Tocar para dormir</string>
+    <string name="lockscreen_emergency_button_summary">Exibir botão de chamada de emergência na tela de bloqueio</string>
+    <string name="lockscreen_emergency_button_title">Mostrar botão de emergência</string>
+    <string name="lockscreen_enable_power_menu_summary">Permitir acesso ao menu de energia na tela de bloqueio segura</string>
+    <string name="lockscreen_enable_power_menu_title">Menu de energia</string>
+    <string name="lockscreen_interface_category">Interface</string>
+    <string name="lockscreen_media_art_blur_level_summary">Intensidade do desfoque quando o filtro de desfoque é aplicado</string>
+    <string name="lockscreen_media_art_blur_level_title">Nível de desfoque da capa da mídia</string>
+    <string name="lockscreen_media_art_fade_level_summary">Sobreposição escura para melhorar a legibilidade do texto</string>
+    <string name="lockscreen_media_art_fade_level_title">Nível de esmaecimento da capa da mídia</string>
+    <string name="lockscreen_media_art_filter_summary">Escolha o filtro visual para a capa da mídia</string>
+    <string name="lockscreen_media_art_filter_title">Filtro da capa da mídia</string>
+    <string name="lockscreen_media_art_pixel_size_summary">Ajustar o tamanho do pixel da capa da mídia exibida na tela de bloqueio</string>
+    <string name="lockscreen_media_art_pixel_size_title">Tamanho do pixel da capa da mídia</string>
+    <string name="lockscreen_smartspace_summary">Mostrar o Google Smartspace quando disponível</string>
+    <string name="lockscreen_smartspace_title">Smartspace</string>
+    <string name="lockscreen_weather_category">Clima</string>
+    <string name="lockscreen_weather_humidity_info_summary">Exibir a umidade atual em porcentagem</string>
+    <string name="lockscreen_weather_humidity_info_title">Informações de umidade</string>
+    <string name="lockscreen_weather_location_summary">Exibir a localização atual do clima</string>
+    <string name="lockscreen_weather_location_title">Localização atual</string>
+    <string name="lockscreen_weather_summary">Exibir a atualização atual do clima</string>
+    <string name="lockscreen_weather_text_summary">Exibir o resumo da condição climática atual</string>
+    <string name="lockscreen_weather_text_title">Condição atual</string>
+    <string name="lockscreen_weather_title">Atualização do clima</string>
+    <string name="lockscreen_weather_wind_info_summary">Exibir a velocidade e direção atuais do vento</string>
+    <string name="lockscreen_weather_wind_info_title">Informações do vento</string>
+    <string name="lockscreen_widgets_color_mode_title">Modo de cor do widget de informações</string>
+    <string name="lockscreen_widgets_enabled_summary">Adicionar widgets à tela de bloqueio</string>
+    <string name="lockscreen_widgets_enabled_title">Ativar widgets da tela de bloqueio</string>
+    <string name="lockscreen_widgets_style1">Material arredondado</string>
+    <string name="lockscreen_widgets_style2">Material quadrado</string>
+    <string name="lockscreen_widgets_style3">Quadrado translúcido</string>
+    <string name="lockscreen_widgets_style4">Arredondado translúcido</string>
+    <string name="lockscreen_widgets_style5">Desfoque quadrado</string>
+    <string name="lockscreen_widgets_style6">Desfoque arredondado</string>
+    <string name="lockscreen_widgets_style_title">Estilo dos widgets da tela de bloqueio</string>
+    <string name="lockscreen_widgets_title">Widgets</string>
+    <string name="lockscreen_widgets_transparency_summary">Configurar o nível de opacidade do widget de estilo translúcido</string>
+    <string name="lockscreen_widgets_transparency_title">Transparência do estilo translúcido</string>
+    <string name="ls_clock_summary">Defina o estilo do relógio e os widgets</string>
+    <string name="ls_clock_title">Relógios da tela de bloqueio</string>
+    <string name="ls_media_art_summary">Exibir a capa da mídia quando disponível</string>
+    <string name="ls_media_art_title">Capa da mídia</string>
+    <string name="main_custom_widgets1">Widget grande 1</string>
+    <string name="main_custom_widgets2">Widget grande 2</string>
+    <string name="media">Reprodutor de mídia</string>
+    <string name="misc_title">Diversos</string>
+    <string name="nowplaying_artist_text_size_summary">Tamanho do texto do nome do artista/álbum</string>
+    <string name="nowplaying_artist_text_size_title">Tamanho do nome do artista</string>
+    <string name="nowplaying_color_mode_title">Modo de cor do texto</string>
+    <string name="nowplaying_compact_style_summary">Mostrar em uma única linha usando o tamanho de texto da faixa</string>
+    <string name="nowplaying_compact_style_title">Estilo compacto</string>
+    <string name="nowplaying_display_title">Opções de exibição</string>
+    <string name="nowplaying_expand_dialog">Expandir diálogo</string>
+    <string name="nowplaying_expand_dialog_summary">Expandir o diálogo do Tocando agora</string>
+    <string name="nowplaying_icon_size_summary">Ajustar o tamanho do ícone</string>
+    <string name="nowplaying_icon_size_title">Tamanho do ícone</string>
+    <string name="nowplaying_icon_style_summary">Escolha qual ícone exibir</string>
+    <string name="nowplaying_icon_style_title">Estilo do ícone</string>
+    <string name="nowplaying_info_summary">O Tocando agora exibe o título e o artista da música em reprodução na sua tela de bloqueio e na Tela Sempre Ativa. Ele aparece automaticamente quando a música está tocando e desaparece quando é interrompida. A posição pode ser ajustada para aparecer em qualquer lugar de cima a baixo na tela.</string>
+    <string name="nowplaying_lyrics_mode_summary">Mostrar letras sincronizadas em vez do título da faixa e do ícone</string>
+    <string name="nowplaying_lyrics_mode_title">Modo de letras</string>
+    <string name="nowplaying_show_on_aod_summary">Exibir informações da música na tela ambiente</string>
+    <string name="nowplaying_show_on_aod_title">Mostrar na Tela Sempre Ativa</string>
+    <string name="nowplaying_show_on_lockscreen_summary">Exibir informações da música quando o dispositivo estiver bloqueado</string>
+    <string name="nowplaying_show_on_lockscreen_title">Mostrar na tela de bloqueio</string>
+    <string name="nowplaying_summary">Mostrar informações da música em reprodução na tela de bloqueio e na Tela Sempre Ativa</string>
+    <string name="nowplaying_title">Tocando agora</string>
+    <string name="nowplaying_track_text_size_summary">Tamanho do texto do título da faixa</string>
+    <string name="nowplaying_track_text_size_title">Tamanho do título da faixa</string>
+    <string name="nowplaying_vertical_position_summary">Ajustar a posição de cima para baixo na tela</string>
+    <string name="nowplaying_vertical_position_title">preenchimento superior</string>
+    <string name="pulse_bar_count_summary">Definir quantas barras são exibidas no visualizador</string>
+    <string name="pulse_bar_count_title">Número de barras</string>
+    <string name="pulse_bar_count_units">barras</string>
+    <string name="pulse_bass_haptics_always">Sempre que a reprodução de mídia estiver ativa</string>
+    <string name="pulse_bass_haptics_none">Sem vibração sutil em picos abruptos de graves</string>
+    <string name="pulse_bass_haptics_running">Somente quando o Pulse está sendo exibido</string>
+    <string name="pulse_bass_haptics_title">Vibração dos graves</string>
+    <string name="pulse_capture_mode_amplitude">Amplitude (Forma de onda)</string>
+    <string name="pulse_capture_mode_fft">FFT (Frequência)</string>
+    <string name="pulse_capture_mode_title">Modo de captura de áudio</string>
+    <string name="pulse_color">Cor do visualizador</string>
+    <string name="pulse_color_accent">Cor de destaque</string>
+    <string name="pulse_color_album">Capa do álbum</string>
+    <string name="pulse_color_lavalamp">Lavalamp</string>
+    <string name="pulse_height_multiplier_summary">Ajustar a altura da visualização</string>
+    <string name="pulse_height_multiplier_title">Altura do Pulse</string>
+    <string name="pulse_renderer">Estilo do visualizador</string>
+    <string name="pulse_renderer_dot_wave">Onda de pontos</string>
+    <string name="pulse_renderer_fading">Blocos esmaecidos</string>
+    <string name="pulse_renderer_matrix">Matrix</string>
+    <string name="pulse_renderer_minimal_wave">Onda minimalista</string>
+    <string name="pulse_renderer_neon_glow">Brilho neon</string>
+    <string name="pulse_renderer_particle">Partícula</string>
+    <string name="pulse_renderer_retro_vu_meter">Medidor VU retrô</string>
+    <string name="pulse_renderer_solid">Linhas sólidas</string>
+    <string name="pulse_renderer_sparkle">Brilho</string>
+    <string name="pulse_renderer_waveform">Forma de onda</string>
+    <string name="pulse_rounded_bars_summary">Exibir as barras do visualizador com cantos arredondados</string>
+    <string name="pulse_rounded_bars_title">Barras arredondadas</string>
+    <string name="pulse_settings_summary">Mostrar um visualizador de barras na tela de bloqueio enquanto a música está tocando</string>
+    <string name="pulse_settings_title">Visualizador Pulse</string>
+    <string name="pulse_show_on_ambient_summary">Exibir o visualizador na tela sempre ativa e no modo ambiente. Desative para mostrar apenas na tela de bloqueio.</string>
+    <string name="pulse_show_on_ambient_title">Mostrar na tela ambiente</string>
+    <string name="qr_scanner">Leitor de QR Code</string>
+    <string name="qs_clock_title">Relógio</string>
+    <string name="ringer">Toque</string>
+    <string name="show_on_aod_summary">Exibir a capa da mídia na Tela Sempre Ativa</string>
+    <string name="show_on_aod_title">Mostrar na Tela Sempre Ativa</string>
+    <string name="status_bar_date_none">Oculto</string>
+    <string name="theme_customization_lock_clock_title">Estilo do relógio</string>
+    <string name="torch">Lanterna</string>
+    <string name="udfps_animation_offset_summary">Ajustar a posição vertical da animação de impressão digital</string>
+    <string name="udfps_animation_offset_title">Deslocamento da animação UDFPS</string>
+    <string name="udfps_animation_size_summary">Ajustar o tamanho da animação de impressão digital</string>
+    <string name="udfps_animation_size_title">Tamanho da animação UDFPS</string>
+    <string name="udfps_cust_summary">Personalize o ícone e a animação de impressão digital</string>
+    <string name="udfps_cust_title">Ícone e animação UDFPS</string>
+    <string name="udfps_custom_footer_text">Defina um ícone personalizado no ícone pré-instalado antes de trocar ou aplicar o ícone personalizado\'s. Após reiniciar o dispositivo, reiniciar a SystemUI uma vez corrigirá o problema de ícone personalizado invisível/em branco </string>
+    <string name="udfps_custom_icon_select_summary">Escolha uma imagem da galeria</string>
+    <string name="udfps_custom_icon_select_title">Selecionar ícone personalizado</string>
+    <string name="udfps_custom_title">Personalização do UDFPS</string>
+    <string name="udfps_icon_aod_summary">Usar ícone UDFPS personalizado na tela Sempre ativa</string>
+    <string name="udfps_icon_aod_title">Ícone UDFPS na AOD</string>
+    <string name="udfps_icon_picker_summary">Escolha seu ícone de impressão digital favorito</string>
+    <string name="udfps_icon_picker_title">Ícone pré-instalado UDFPS</string>
+    <string name="udfps_icon_type_title">Tipo de ícone</string>
+    <string name="udfps_recog_animation_effect_summary">Escolha o efeito de animação</string>
+    <string name="udfps_recog_animation_effect_title">Animação personalizada do UDFPS</string>
+    <string name="unit_pixels" translatable="false">dp</string>
+    <string name="wallet">Carteira</string>
+    <string name="weather">Clima</string>
+    <string name="weather_settings_summary">Configurar pacote de ícones e serviço de clima</string>
+    <string name="weather_settings_title">Configurações do clima</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="lockscreen_weather_enabled_info">Requer um serviço de clima personalizado configurado e o smartspace desativado</string>
+    <string name="systemui_restart_title">Reinicialização da SystemUI necessária</string>
+    <string name="systemui_restart_message">Para que as alterações tenham efeito, é necessário reiniciar a SystemUI. Reiniciar a SystemUI agora?</string>
+    <string name="systemui_restart_yes">Sim</string>
+    <string name="systemui_restart_not_now">Agora não</string>
+    <string name="udfps_custom_icon_selected">Ícone personalizado aplicado</string>
+    <string name="depthwall_clear_subject_confirm_message">Isso removerá a imagem atual do assunto do papel de parede de profundidade. Continuar?</string>
+    <string name="systemui_restart_process">Reiniciando a SystemUI para aplicar as alterações...</string>
+</resources>

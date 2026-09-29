@@ -5,4 +5,8 @@
 -->
 <resources>
     <string name="app_name" translatable="false">Lock Styles</string>
+    <string name="lock_settings">Lock screen settings</string>
+    <string name="apply_change">Apply</string>
+    <string name="clock_font_default">Default</string>
+    <string name="depthwall_extract_unavailable">Settings\' subject extractor isn\'t available</string>
 </resources>

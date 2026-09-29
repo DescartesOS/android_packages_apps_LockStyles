@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -105,6 +106,7 @@ fun SwitcherScreen(
     onCustomise: (LockScreen) -> Unit,
     onAdd: () -> Unit,
     onDelete: (LockScreen) -> Unit,
+    onSettings: () -> Unit,
 ) {
     var changes by remember { mutableIntStateOf(0) }
     DisposableEffect(store) {
@@ -226,7 +228,16 @@ fun SwitcherScreen(
                 Modifier.padding(bottom = 32.dp).alpha(chrome),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Spacer(Modifier.width(72.dp))
+                Box(
+                    Modifier.size(56.dp).clip(CircleShape).background(Color(0xFF1C1C1E))
+                        .border(1.dp, Color(0x33FFFFFF), CircleShape)
+                        .clickable(onClick = onSettings),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(Icons.Rounded.Tune, stringResource(R.string.lock_settings),
+                        tint = Color.White, modifier = Modifier.size(26.dp))
+                }
+                Spacer(Modifier.width(16.dp))
                 Box(
                     Modifier.width(200.dp).height(56.dp).clip(RoundedCornerShape(28.dp))
                         .background(Color(0xFF1C1C1E)).border(1.dp, Color(0x33FFFFFF),
