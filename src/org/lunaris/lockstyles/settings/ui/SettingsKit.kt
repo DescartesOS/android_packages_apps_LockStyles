@@ -89,13 +89,12 @@ import org.lunaris.lockstyles.settings.state
 val Accent = Color(0xFFB9A7FF)
 private val OnGlass = Color.White
 private val OnGlassDim = Color(0xB3FFFFFF)
-private const val OUTER = 26
-private const val INNER = 6
 
 /** The page every settings screen sits on: the glass backdrop, which the surfaces bend. */
 @Composable
 fun GlassBackdrop(content: @Composable () -> Unit) {
-    val backdrop = rememberBackdrop()
+    // Pages share the one their host made, so moving between them doesn't redraw it.
+    val backdrop = LocalBackdrop.current ?: rememberBackdrop()
     CompositionLocalProvider(LocalBackdrop provides backdrop) {
         Box(Modifier.fillMaxSize().backdrop(backdrop)) { content() }
     }
@@ -112,8 +111,8 @@ fun SettingsPage(title: String, onBack: () -> Unit, content: LazyListScope.() ->
             item {
                 Column(Modifier.statusBarsPadding().padding(horizontal = 16.dp)) {
                     Box(
-                        Modifier.padding(top = 8.dp).size(44.dp).liquidGlass(22.dp)
-                            .clip(CircleShape).clickable(onClick = onBack),
+                        Modifier.padding(top = 8.dp).size(44.dp).liquidGlass(16.dp)
+                            .clip(SquircleShape(16.dp)).clickable(onClick = onBack),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, null, tint = OnGlass)
@@ -144,7 +143,7 @@ fun Group(title: String?, rows: List<@Composable (RowShape) -> Unit>) {
             Text(title, color = Accent, fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
         }
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             rows.forEachIndexed { i, row ->
                 row(RowShape(first = i == 0, last = i == rows.lastIndex))
             }
@@ -152,11 +151,9 @@ fun Group(title: String?, rows: List<@Composable (RowShape) -> Unit>) {
     }
 }
 
-class RowShape(first: Boolean, last: Boolean) {
-    val top = (if (first) OUTER else INNER).dp
-    val bottom = (if (last) OUTER else INNER).dp
-    val shape = RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom,
-        bottomEnd = bottom)
+/** Where a row sits in its group; every row is the same squircle, whatever its place. */
+class RowShape(val first: Boolean, val last: Boolean) {
+    val shape = SquircleShape()
 }
 
 @Composable
@@ -169,7 +166,7 @@ private fun GlassRow(
     val haptics = LocalHapticFeedback.current
     Box(
         Modifier.fillMaxWidth()
-            .liquidGlass(shape.top, shape.top, shape.bottom, shape.bottom)
+            .liquidGlass()
             .clip(shape.shape)
             .then(if (onClick != null && enabled) Modifier.clickable {
                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -209,7 +206,7 @@ fun LazyListScope.mainSwitch(title: String, setting: LockSetting<Boolean>,
             label = "main")
         Row(
             Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()
-                .liquidGlass(OUTER.dp).clip(RoundedCornerShape(OUTER.dp)).background(bg)
+                .liquidGlass().clip(SquircleShape()).background(bg)
                 .clickable { on = !on; onChange(on) }
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -359,7 +356,8 @@ fun navRow(
     GlassRow(shape, enabled, onClick = onClick) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
-                Box(Modifier.size(40.dp).clip(CircleShape).background(Accent.copy(alpha = 0.22f)),
+                Box(Modifier.size(40.dp).clip(SquircleShape(12.dp))
+                    .background(Accent.copy(alpha = 0.22f)),
                     contentAlignment = Alignment.Center) {
                     Icon(icon, null, tint = Accent, modifier = Modifier.size(22.dp))
                 }

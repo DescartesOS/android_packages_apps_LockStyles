@@ -99,10 +99,10 @@ fun ClockStylePicker() {
                     style = index
                 }) {
                 Box(
-                    Modifier.fillMaxWidth().height(110.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
-                        .clip(RoundedCornerShape(20.dp))
-                        .border(if (on) 2.dp else 0.5.dp,
-                            if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp))
+                    Modifier.fillMaxWidth().height(110.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
+                        .clip(SquircleShape())
+                        .border(if (on) 2.dp else 0.dp,
+                            if (on) Accent else Color.Transparent, SquircleShape())
                         .padding(8.dp),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -156,10 +156,10 @@ fun ClockFontPicker() {
                     askRestart()
                 }) {
                 Box(
-                    Modifier.size(88.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
-                        .clip(RoundedCornerShape(20.dp))
-                        .border(if (on) 2.dp else 0.5.dp,
-                            if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp)),
+                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
+                        .clip(SquircleShape())
+                        .border(if (on) 2.dp else 0.dp,
+                            if (on) Accent else Color.Transparent, SquircleShape()),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text("12", color = Color.White, fontSize = 34.sp,
@@ -307,10 +307,10 @@ fun UdfpsResourcePicker(title: String, pack: UdfpsPacks, setting: LockSetting<In
                     selected = item.index
                 }) {
                 Box(
-                    Modifier.size(88.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
-                        .clip(RoundedCornerShape(20.dp))
-                        .border(if (on) 2.dp else 0.5.dp,
-                            if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp)),
+                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
+                        .clip(SquircleShape())
+                        .border(if (on) 2.dp else 0.dp,
+                            if (on) Accent else Color.Transparent, SquircleShape()),
                     contentAlignment = Alignment.Center,
                 ) {
                     val bitmap = remember(item) {
