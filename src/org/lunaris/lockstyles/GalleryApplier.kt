@@ -7,12 +7,16 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ColorSpace
 import android.graphics.HardwareRenderer
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.graphics.RenderEffect
 import android.graphics.RenderNode
 import android.graphics.Shader
+import android.hardware.HardwareBuffer
+import android.media.ImageReader
 import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
@@ -183,7 +187,33 @@ object GalleryApplier {
         val root = RenderNode("GalleryBlurRoot").apply { setPosition(0, 0, w, h) }
         root.beginRecording().drawRenderNode(content)
         root.endRecording()
-        return HardwareRenderer.createHardwareBitmap(root, w, h)
-            ?.copy(Bitmap.Config.ARGB_8888, false) ?: source
+        return render(root, w, h) ?: source
+    }
+
+    /**
+     * Draws [root] on the GPU and reads it back. Android 16 has no
+     * HardwareRenderer.createHardwareBitmap, so it renders into an ImageReader instead.
+     */
+    private fun render(root: RenderNode, w: Int, h: Int): Bitmap? {
+        val reader = ImageReader.newInstance(w, h, PixelFormat.RGBA_8888, 1,
+            HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE or HardwareBuffer.USAGE_GPU_COLOR_OUTPUT)
+        val renderer = HardwareRenderer()
+        return try {
+            renderer.setSurface(reader.surface)
+            renderer.setContentRoot(root)
+            renderer.createRenderRequest().setWaitForPresent(true).syncAndDraw()
+            reader.acquireNextImage()?.use { image ->
+                image.hardwareBuffer?.use { buffer ->
+                    Bitmap.wrapHardwareBuffer(buffer, ColorSpace.get(ColorSpace.Named.SRGB))
+                        ?.copy(Bitmap.Config.ARGB_8888, false)
+                }
+            }
+        } catch (e: RuntimeException) {
+            Log.w(TAG, "Could not render the blur", e)
+            null
+        } finally {
+            renderer.destroy()
+            reader.close()
+        }
     }
 }
