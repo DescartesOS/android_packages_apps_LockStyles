@@ -81,7 +81,7 @@ fun wallpaperLabel(wallpaper: GalleryWallpaper): Int = when (wallpaper.kind) {
     Kind.PAPER -> if (GalleryRenderer.isCollectionPaper(wallpaper.variant)) {
         R.string.gallery_collections
     } else {
-        R.string.gallery_penguinos
+        R.string.gallery_lunaris
     }
     Kind.ASTRONOMY -> R.string.gallery_astronomy
     Kind.WEATHER -> R.string.gallery_weather

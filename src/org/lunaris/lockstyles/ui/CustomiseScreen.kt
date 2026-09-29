@@ -389,7 +389,7 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
             }
             Kind.WEATHER -> {}
             Kind.PAPER -> {
-                // Choose among the wallpaper's own set: the Collections or the PenguinOS walls.
+                // Choose among the wallpaper's own set: the Collections or the Lunaris walls.
                 val collection = GalleryRenderer.isCollectionPaper(wallpaper.variant)
                 val variants =
                     if (collection) 0 until GalleryRenderer.PAPER_COLLECTIONS

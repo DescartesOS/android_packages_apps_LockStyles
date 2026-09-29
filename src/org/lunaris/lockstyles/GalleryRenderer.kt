@@ -322,15 +322,16 @@ object GalleryRenderer {
         override fun sizeOf(key: String, value: Bitmap) = value.allocationByteCount
     }
 
-    /** The bundled wallpapers: the PenguinOS Collections, then the PenguinOS walls. */
+    /**
+     * The bundled wallpapers: the Collections, then the Lunaris walls. Add Lunaris walls after
+     * the Collections; their section stays hidden while there are none.
+     */
     val PAPERS = intArrayOf(
         R.drawable.gallery_paper_0, R.drawable.gallery_paper_1, R.drawable.gallery_paper_2,
-        R.drawable.gallery_paper_3, R.drawable.gallery_paper_4, R.drawable.gallery_paper_5,
-        R.drawable.gallery_paper_6,
     )
     const val PAPER_COLLECTIONS = 3
 
-    /** Whether a [Kind.PAPER] variant is one of the Collections, rather than a PenguinOS wall. */
+    /** Whether a [Kind.PAPER] variant is one of the Collections, rather than a Lunaris wall. */
     fun isCollectionPaper(variant: Int) = variant < PAPER_COLLECTIONS
 
     private fun paper(context: Context, canvas: Canvas, variant: Int, w: Float, h: Float) {

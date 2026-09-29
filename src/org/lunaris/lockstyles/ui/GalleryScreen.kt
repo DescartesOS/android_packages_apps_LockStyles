@@ -175,10 +175,10 @@ fun GalleryScreen(
                     onPick)
             }
 
-            item {
+            if (GalleryRenderer.PAPERS.size > GalleryRenderer.PAPER_COLLECTIONS) item {
                 val tiles = (GalleryRenderer.PAPER_COLLECTIONS until GalleryRenderer.PAPERS.size)
                     .map { Tile(GalleryWallpaper(Kind.PAPER, it)) }
-                Section(stringResource(R.string.gallery_penguinos), null, true, tiles, weather,
+                Section(stringResource(R.string.gallery_lunaris), null, true, tiles, weather,
                     onPick)
             }
 
