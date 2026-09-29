@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.content.Context
 import android.content.SharedPreferences

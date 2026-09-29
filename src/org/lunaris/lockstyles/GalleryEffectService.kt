@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver

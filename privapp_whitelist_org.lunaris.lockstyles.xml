@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 Lunaris-AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<permissions>
+    <privapp-permissions package="org.lunaris.lockstyles">
+        <permission name="android.permission.CUSTOMIZE_SYSTEM_UI" />
+        <permission name="android.permission.READ_WALLPAPER_INTERNAL" />
+        <permission name="android.permission.SET_WALLPAPER_COMPONENT" />
+        <permission name="android.permission.WRITE_SECURE_SETTINGS" />
+    </privapp-permissions>
+</permissions>

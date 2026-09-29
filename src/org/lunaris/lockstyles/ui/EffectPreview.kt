@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import android.graphics.SurfaceTexture
 import android.os.Handler
@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.android.customization.gallery.GalleryEffect
-import com.android.customization.gallery.GalleryEffectRenderer
+import org.lunaris.lockstyles.GalleryEffect
+import org.lunaris.lockstyles.GalleryEffectRenderer
 
 /** Plays [effect] over [photo] from locked to unlocked and back, as a preview of unlocking. */
 @Composable

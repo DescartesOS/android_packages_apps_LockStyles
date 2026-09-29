@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import android.Manifest
 import android.app.WallpaperManager
@@ -34,22 +34,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
-import com.android.customization.gallery.ClockStyle
-import com.android.customization.gallery.CustomClocks
-import com.android.customization.gallery.GalleryApplier
-import com.android.customization.gallery.GalleryStore
-import com.android.customization.gallery.GalleryWallpaper
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.customization.gallery.LockScreen
-import com.android.customization.picker.clock.domain.interactor.ClockPickerInteractor
-import com.android.customization.picker.clock.shared.ClockSize
-import com.android.customization.picker.clock.shared.model.ClockMetadataModel
-import com.android.customization.picker.quickaffordance.domain.interactor.KeyguardQuickAffordancePickerInteractor
-import com.android.systemui.plugins.keyguard.ui.clocks.ClockAxisStyle
-import dagger.hilt.android.AndroidEntryPoint
+import org.lunaris.lockstyles.ClockStyle
+import org.lunaris.lockstyles.CustomClocks
+import org.lunaris.lockstyles.GalleryApplier
+import org.lunaris.lockstyles.GalleryStore
+import org.lunaris.lockstyles.GalleryWallpaper
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.LockScreen
+import org.lunaris.lockstyles.Shortcuts
+import org.lunaris.lockstyles.StockClock
 import java.io.File
 import java.io.FileOutputStream
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -58,11 +53,9 @@ import kotlinx.coroutines.withContext
  * iOS-style lock screens: a switcher of saved lock screens, a gallery to add new ones and a
  * customise screen. Opened by long-pressing the lock screen.
  */
-@AndroidEntryPoint(ComponentActivity::class)
-class LockScreenGalleryActivity : Hilt_LockScreenGalleryActivity() {
+class LockScreenGalleryActivity : ComponentActivity() {
 
-    @Inject lateinit var clockInteractor: ClockPickerInteractor
-    @Inject lateinit var affordanceInteractor: KeyguardQuickAffordancePickerInteractor
+    private val shortcuts by lazy { Shortcuts(this) }
 
     private sealed interface Screen {
         /** [zoomIn]: arrive as a full lock screen shrinking into its card. */
@@ -212,7 +205,7 @@ class LockScreenGalleryActivity : Hilt_LockScreenGalleryActivity() {
                         is Screen.Customise -> CustomiseScreen(
                             initial = current.lockScreen,
                             isNew = current.isNew,
-                            affordanceInteractor = affordanceInteractor,
+                            shortcuts = shortcuts,
                             onCancel = {
                                 screen = if (current.isNew) Screen.Gallery
                                 else Screen.Switcher(zoomIn = true)
@@ -282,18 +275,13 @@ class LockScreenGalleryActivity : Hilt_LockScreenGalleryActivity() {
     private suspend fun applyStockClock(style: ClockStyle) {
         val axes = style.preset?.let {
             val (weight, width) = CLOCK_PRESETS[it.coerceIn(0, CLOCK_PRESETS.size - 1)]
-            ClockAxisStyle(mapOf("wght" to weight, "wdth" to width,
-                "ROND" to if (style.rounded) 100f else 0f, "slnt" to 0f))
+            mapOf("wght" to weight, "wdth" to width,
+                "ROND" to if (style.rounded) 100f else 0f, "slnt" to 0f)
         }
-        runCatching {
-            clockInteractor.applyClock(
-                clockId = null,
-                size = if (style.small) ClockSize.SMALL else ClockSize.DYNAMIC,
-                selectedColorId = null,
-                colorToneProgress = ClockMetadataModel.DEFAULT_COLOR_TONE_PROGRESS,
-                seedColor = style.color,
-                axisSettings = axes,
-            )
+        withContext(Dispatchers.IO) {
+            runCatching {
+                StockClock.apply(this@LockScreenGalleryActivity, style.small, style.color, axes)
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
@@ -53,12 +53,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.customization.gallery.ClockStyle
-import com.android.customization.gallery.GalleryRenderer
-import com.android.customization.gallery.GalleryWallpaper
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.customization.gallery.GalleryWeather
-import com.android.themepicker.R
+import org.lunaris.lockstyles.ClockStyle
+import org.lunaris.lockstyles.GalleryRenderer
+import org.lunaris.lockstyles.GalleryWallpaper
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.GalleryWeather
+import org.lunaris.lockstyles.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

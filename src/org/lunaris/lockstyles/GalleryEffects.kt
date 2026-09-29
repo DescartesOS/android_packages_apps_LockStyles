@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -18,7 +18,7 @@ import android.opengl.GLES30
 import android.opengl.GLUtils
 import android.util.Log
 import android.view.Surface
-import com.android.themepicker.R
+import org.lunaris.lockstyles.R
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer

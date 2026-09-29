@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -18,8 +18,8 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.text.TextPaint
 import android.util.LruCache
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.themepicker.R
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.R
 import java.text.BreakIterator
 import java.util.Calendar
 import kotlin.math.PI

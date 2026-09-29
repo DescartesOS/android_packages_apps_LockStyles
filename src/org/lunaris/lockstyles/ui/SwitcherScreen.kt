@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
@@ -64,12 +64,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.customization.gallery.GalleryRenderer
-import com.android.customization.gallery.GalleryStore
-import com.android.customization.gallery.GalleryWallpaper
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.customization.gallery.LockScreen
-import com.android.themepicker.R
+import org.lunaris.lockstyles.GalleryRenderer
+import org.lunaris.lockstyles.GalleryStore
+import org.lunaris.lockstyles.GalleryWallpaper
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.LockScreen
+import org.lunaris.lockstyles.R
 import kotlin.math.abs
 import kotlin.math.min
 import kotlinx.coroutines.launch

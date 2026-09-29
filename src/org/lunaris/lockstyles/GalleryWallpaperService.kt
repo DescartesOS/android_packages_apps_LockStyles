@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.app.WallpaperManager
 import android.database.ContentObserver
@@ -9,8 +9,8 @@ import android.os.HandlerThread
 import android.service.wallpaper.WallpaperService
 import android.util.Log
 import android.view.SurfaceHolder
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.customization.gallery.GalleryWallpaper.Shuffle
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.GalleryWallpaper.Shuffle
 import java.util.Calendar
 
 /** Draws the gallery's live wallpapers: animated, time-based and photo shuffle. */

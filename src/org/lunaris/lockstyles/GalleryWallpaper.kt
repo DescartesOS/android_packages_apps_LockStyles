@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import org.json.JSONArray
 import org.json.JSONObject

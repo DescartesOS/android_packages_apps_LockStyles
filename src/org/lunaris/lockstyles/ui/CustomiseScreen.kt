@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -44,7 +44,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -70,18 +69,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.android.customization.gallery.ClockStyle
-import com.android.customization.gallery.CustomClocks
-import com.android.customization.gallery.GalleryEffect
-import com.android.customization.gallery.GalleryRenderer
-import com.android.customization.gallery.GalleryWallpaper
-import com.android.customization.gallery.GalleryWallpaper.Kind
-import com.android.customization.gallery.GalleryWallpaper.Shuffle
-import com.android.customization.gallery.GalleryWeather
-import com.android.customization.gallery.HomeStyle
-import com.android.customization.gallery.LockScreen
-import com.android.customization.picker.quickaffordance.domain.interactor.KeyguardQuickAffordancePickerInteractor
-import com.android.themepicker.R
+import org.lunaris.lockstyles.ClockStyle
+import org.lunaris.lockstyles.CustomClocks
+import org.lunaris.lockstyles.GalleryEffect
+import org.lunaris.lockstyles.GalleryRenderer
+import org.lunaris.lockstyles.GalleryWallpaper
+import org.lunaris.lockstyles.GalleryWallpaper.Kind
+import org.lunaris.lockstyles.GalleryWallpaper.Shuffle
+import org.lunaris.lockstyles.GalleryWeather
+import org.lunaris.lockstyles.HomeStyle
+import org.lunaris.lockstyles.LockScreen
+import org.lunaris.lockstyles.Shortcuts
+import org.lunaris.lockstyles.R
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,7 +96,7 @@ private val ACCENT = Color(0xFF0A84FF)
 fun CustomiseScreen(
     initial: LockScreen,
     isNew: Boolean,
-    affordanceInteractor: KeyguardQuickAffordancePickerInteractor,
+    shortcuts: Shortcuts,
     onCancel: () -> Unit,
     onDone: (LockScreen, CustomClocks.Tuning) -> Unit,
 ) {
@@ -197,7 +196,7 @@ fun CustomiseScreen(
     }
     if (sheet == "shortcuts") {
         ModalBottomSheet(onDismissRequest = { sheet = null }, containerColor = Color(0xFF1C1C1E)) {
-            ShortcutsSheet(affordanceInteractor)
+            ShortcutsSheet(shortcuts)
         }
     }
     if (askHome) {
@@ -622,11 +621,16 @@ private fun TuningSwitch(label: String, checked: Boolean, onChange: (Boolean) ->
 }
 
 @Composable
-private fun ShortcutsSheet(interactor: KeyguardQuickAffordancePickerInteractor) {
+private fun ShortcutsSheet(shortcuts: Shortcuts) {
     val scope = rememberCoroutineScope()
-    val slots by interactor.slots.collectAsState(initial = emptyList())
-    val affordances by interactor.affordances.collectAsState(initial = emptyList())
-    val selections by interactor.selections.collectAsState(initial = emptyList())
+    var version by remember { mutableStateOf(0) }
+    val state by produceState(Triple(emptyList<Shortcuts.Slot>(),
+            emptyList<Shortcuts.Affordance>(), emptyList<Shortcuts.Selection>()), version) {
+        value = withContext(Dispatchers.IO) {
+            Triple(shortcuts.slots(), shortcuts.affordances(), shortcuts.selections())
+        }
+    }
+    val (slots, affordances, selections) = state
     Column(Modifier.fillMaxWidth().padding(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(stringResource(R.string.gallery_shortcuts), color = Color.White, fontSize = 20.sp,
@@ -643,8 +647,11 @@ private fun ShortcutsSheet(interactor: KeyguardQuickAffordancePickerInteractor) 
                 .coerceAtLeast(0)) { i ->
                 val id = options[i].first
                 scope.launch {
-                    if (id == null) interactor.unselectAllFromSlot(slot.id)
-                    else interactor.select(slot.id, id)
+                    withContext(Dispatchers.IO) {
+                        if (id == null) shortcuts.unselectAll(slot.id)
+                        else shortcuts.select(slot.id, id)
+                    }
+                    version++
                 }
             }
         }

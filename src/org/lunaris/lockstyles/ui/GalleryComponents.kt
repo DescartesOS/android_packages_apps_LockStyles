@@ -1,4 +1,4 @@
-package com.android.customization.gallery.ui
+package org.lunaris.lockstyles.ui
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -53,11 +53,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.customization.gallery.ClockStyle
-import com.android.customization.gallery.CustomClocks
-import com.android.customization.gallery.GalleryRenderer
-import com.android.customization.gallery.GalleryWallpaper
-import com.android.customization.gallery.GalleryWeather
+import org.lunaris.lockstyles.ClockStyle
+import org.lunaris.lockstyles.CustomClocks
+import org.lunaris.lockstyles.GalleryRenderer
+import org.lunaris.lockstyles.GalleryWallpaper
+import org.lunaris.lockstyles.GalleryWeather
 import java.io.File
 import java.util.Calendar
 import kotlinx.coroutines.Dispatchers

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2026 PenguinOS
+     SPDX-FileCopyrightText: 2026 Lunaris-AOSP
+     SPDX-License-Identifier: Apache-2.0
+-->
+<exceptions>
+    <exception package="org.lunaris.lockstyles">
+        <!-- The depth wallpaper subject Singularity saves in shared storage, for the effects. -->
+        <permission name="android.permission.READ_EXTERNAL_STORAGE" fixed="true" />
+        <!-- Photos for the gallery's photo wallpapers. -->
+        <permission name="android.permission.READ_MEDIA_IMAGES" fixed="false" />
+    </exception>
+</exceptions>

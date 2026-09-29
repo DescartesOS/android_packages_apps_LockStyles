@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.app.WallpaperManager
 import android.content.ComponentName
@@ -25,7 +25,10 @@ object GalleryApplier {
 
     private const val TAG = "GalleryApplier"
     private const val DEPTH_ENABLED = "depth_wallpaper_enabled"
-    private const val ACTION_EXTRACT_DEPTH = "com.android.settings.action.EXTRACT_DEPTH_SUBJECT_NOW"
+    private const val DEPTH_AUTO_SUBJECT = "depth_wallpaper_auto_subject"
+    private const val ACTION_EXTRACT_DEPTH = "org.lunaris.intent.action.EXTRACT_DEPTH_SUBJECT_NOW"
+    private val DEPTH_EXTRACTOR = ComponentName("com.android.settings",
+        "org.lunaris.settings.utils.WallpaperSubjectExtractorService")
     const val DEPTH_SUBJECT = "depth_wallpaper_subject_image_uri"
     private const val SUBJECT_TIMEOUT_MS = 15_000L
 
@@ -96,11 +99,20 @@ object GalleryApplier {
         try {
             Settings.System.putInt(resolver, DEPTH_ENABLED, if (depth) 1 else 0)
             if (depth && extract) {
-                context.startService(Intent(ACTION_EXTRACT_DEPTH).setPackage("com.android.settings"))
+                requestSubject(context)
             }
         } catch (e: RuntimeException) {
             Log.w(TAG, "Could not change the depth effect", e)
         }
+    }
+
+    /**
+     * Singularity's extractor cuts the subject out of the lock screen wallpaper; with the auto
+     * subject on, it also follows later wallpaper changes, such as Photo Shuffle's.
+     */
+    private fun requestSubject(context: Context) {
+        Settings.System.putInt(context.contentResolver, DEPTH_AUTO_SUBJECT, 1)
+        context.startService(Intent(ACTION_EXTRACT_DEPTH).setComponent(DEPTH_EXTRACTOR))
     }
 
     /**
@@ -114,7 +126,7 @@ object GalleryApplier {
             WallpaperManager.getInstance(context).setBitmap(photo, null, true,
                 WallpaperManager.FLAG_LOCK)
             Settings.System.putInt(resolver, DEPTH_ENABLED, 1)
-            context.startService(Intent(ACTION_EXTRACT_DEPTH).setPackage("com.android.settings"))
+            requestSubject(context)
         } catch (e: Exception) {
             Log.w(TAG, "Could not extract the depth subject", e)
             return

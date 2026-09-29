@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,7 +9,7 @@ import android.graphics.Paint
 import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.util.LruCache
-import com.android.themepicker.R
+import org.lunaris.lockstyles.R
 import java.util.TimeZone
 import kotlin.math.PI
 import kotlin.math.asin

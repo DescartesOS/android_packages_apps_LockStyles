@@ -1,4 +1,4 @@
-package com.android.customization.gallery
+package org.lunaris.lockstyles
 
 import android.content.Context
 import android.content.Intent
@@ -32,7 +32,11 @@ object CustomClocks {
     private const val KEY_SIZE = "lock_screen_custom_clock_size_scale"
     private const val KEY_MARGIN_TOP = "lock_screen_custom_clock_margin_top"
     private const val KEY_OPACITY = "lock_screen_custom_clock_opacity"
-    private const val KEY_HIDE_AOSP_CLOCK = "ls_clock_hide"
+    private const val KEY_THEME_OVERLAYS = "theme_customization_overlay_packages"
+    private const val CATEGORY_HIDE_CLOCK = "android.theme.customization.hideclock"
+    private const val CATEGORY_SMARTSPACE = "android.theme.customization.smartspace"
+    private const val OVERLAY_HIDE_CLOCK = "com.android.systemui.clocks.hideclock"
+    private const val OVERLAY_HIDE_SMARTSPACE = "com.android.systemui.hide.smartspace"
     private const val KEY_MARGIN_START = "lock_screen_custom_clock_margin_start"
     private const val KEY_GRADIENT = "lock_screen_custom_clock_gradient_enabled"
     private const val KEY_GRADIENT_START = "lock_screen_custom_clock_gradient_color_start"
@@ -45,6 +49,7 @@ object CustomClocks {
     private const val KEY_WEATHER = "custom_clock_weather"
     private const val COLOR_MODE_ACCENT = "accent"
     private const val PREVIEW_SHADOW = 0x59000000
+    private const val CLOCK_UTILS = "org.lunaris.settings.fragments.lockscreen.ClockUtils"
     private const val ACTION_RESTART = "com.android.systemui.action.RESTART_FOR_CLOCK_STYLE"
 
     /** Styles whose colours SystemUI never changes. */
@@ -81,14 +86,17 @@ object CustomClocks {
         companion object {
             fun load(context: Context): Tuning {
                 val cr = context.contentResolver
-                fun int(key: String, default: Int) = Settings.Secure.getInt(cr, key, default)
+                // Hidden keys are only readable by system apps; a sideloaded build gets defaults.
+                fun int(key: String, default: Int) =
+                    runCatching { Settings.Secure.getInt(cr, key, default) }.getOrDefault(default)
                 val d = Tuning()
                 return Tuning(
                     scale = int(KEY_SIZE, d.scale),
                     opacity = int(KEY_OPACITY, d.opacity),
                     marginTop = int(KEY_MARGIN_TOP, d.marginTop),
                     marginStart = int(KEY_MARGIN_START, d.marginStart),
-                    accent = Settings.Secure.getString(cr, KEY_COLOR_MODE) == COLOR_MODE_ACCENT,
+                    accent = runCatching { Settings.Secure.getString(cr, KEY_COLOR_MODE) }
+                        .getOrNull() == COLOR_MODE_ACCENT,
                     gradient = int(KEY_GRADIENT, 0) != 0,
                     gradientStart = int(KEY_GRADIENT_START, d.gradientStart),
                     gradientEnd = int(KEY_GRADIENT_END, d.gradientEnd),
@@ -133,7 +141,7 @@ object CustomClocks {
             val settings = context.createPackageContext(SETTINGS,
                 Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY)
             val utils =
-                settings.classLoader.loadClass("com.android.settings.lockscreen.ClockUtils")
+                settings.classLoader.loadClass(CLOCK_UTILS)
             val instance = utils.getField("INSTANCE").get(null)
             val settingsLayouts = utils.getMethod("getCLOCK_LAYOUTS").invoke(instance) as IntArray
             @Suppress("UNCHECKED_CAST")
@@ -295,9 +303,9 @@ object CustomClocks {
      */
     fun apply(context: Context, style: Int, color: Int?, tuning: Tuning? = null) {
         val resolver = context.contentResolver
-        val before = Settings.Secure.getInt(resolver, KEY_STYLE, 0)
+        val before = runCatching { Settings.Secure.getInt(resolver, KEY_STYLE, 0) }.getOrDefault(0)
         Settings.Secure.putInt(resolver, KEY_STYLE, style)
-        Settings.System.putInt(resolver, KEY_HIDE_AOSP_CLOCK, if (style != 0) 1 else 0)
+        setAospClockHidden(context, style != 0)
         if (style != 0) {
             // Without new tuning, e.g. from the switcher, the current accent or gradient stays.
             val current = tuning ?: Tuning.load(context)
@@ -313,7 +321,29 @@ object CustomClocks {
             tuning?.save(context)
         }
         if ((before == 0) != (style == 0)) {
+            // Lunaris applies the stock clock's hideclock overlays through ThemeOverlayController;
+            // the rest of the keyguard only reads the style at startup.
             context.sendBroadcast(Intent(ACTION_RESTART).setPackage(SYSTEMUI))
         }
+    }
+
+    /**
+     * As Singularity's clock picker does: a custom style hides SystemUI's own clock and
+     * smartspace through their theme overlays.
+     */
+    private fun setAospClockHidden(context: Context, hidden: Boolean) {
+        val resolver = context.contentResolver
+        val json = runCatching {
+            org.json.JSONObject(Settings.Secure.getString(resolver, KEY_THEME_OVERLAYS) ?: "{}")
+        }.getOrDefault(org.json.JSONObject())
+        if (hidden) {
+            json.put(CATEGORY_HIDE_CLOCK, OVERLAY_HIDE_CLOCK)
+            json.put(CATEGORY_SMARTSPACE, OVERLAY_HIDE_SMARTSPACE)
+        } else {
+            json.remove(CATEGORY_HIDE_CLOCK)
+            json.remove(CATEGORY_SMARTSPACE)
+        }
+        json.put("_applied_timestamp", System.currentTimeMillis())
+        Settings.Secure.putString(resolver, KEY_THEME_OVERLAYS, json.toString())
     }
 }
