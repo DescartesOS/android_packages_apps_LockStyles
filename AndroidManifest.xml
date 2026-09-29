@@ -51,6 +51,7 @@
             android:name=".settings.ui.LockSettingsActivity"
             android:label="@string/lock_settings"
             android:theme="@style/Theme.LockStyles"
+            android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>
                 <action android:name="org.lunaris.lockstyles.action.LOCK_SCREEN_SETTINGS" />

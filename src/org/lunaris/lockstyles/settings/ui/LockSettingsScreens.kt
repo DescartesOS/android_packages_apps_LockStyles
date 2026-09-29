@@ -34,6 +34,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,12 +61,17 @@ val LocalAskRestart = staticCompositionLocalOf<() -> Unit> { {} }
 @Composable
 fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     var stack by remember { mutableStateOf(listOf(start)) }
+    // Opened again on another page, e.g. from Singularity: start over there.
+    LaunchedEffect(start) { if (stack.first() != start) stack = listOf(start) }
     var askRestart by remember { mutableStateOf(false) }
+    val saved = rememberSaveableStateHolder()
+    val backdrop = rememberBackdrop()
     val open: (Page) -> Unit = { stack = stack + it }
     val back: () -> Unit = { if (stack.size > 1) stack = stack.dropLast(1) else onExit() }
     BackHandler(onBack = back)
 
-    CompositionLocalProvider(LocalAskRestart provides { askRestart = true }) {
+    CompositionLocalProvider(LocalAskRestart provides { askRestart = true },
+            LocalBackdrop provides backdrop) {
         AnimatedContent(
             targetState = stack,
             transitionSpec = {
@@ -76,15 +83,18 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
             },
             label = "page",
         ) { pages ->
-            when (pages.last()) {
-                Page.MAIN -> MainPage(open, back)
-                Page.CLOCK -> ClockPage(open, back)
-                Page.WIDGETS -> WidgetsPage(back)
-                Page.DEPTH -> DepthPage(back)
-                Page.MEDIA_ART -> MediaArtPage(back)
-                Page.PULSE -> PulsePage(back)
-                Page.NOW_PLAYING -> NowPlayingPage(back)
-                Page.UDFPS -> UdfpsPage(back)
+            // Keyed by where it sits in the stack, so going back finds it as it was left.
+            saved.SaveableStateProvider(pages.joinToString("/")) {
+                when (pages.last()) {
+                    Page.MAIN -> MainPage(open, back)
+                    Page.CLOCK -> ClockPage(open, back)
+                    Page.WIDGETS -> WidgetsPage(back)
+                    Page.DEPTH -> DepthPage(back)
+                    Page.MEDIA_ART -> MediaArtPage(back)
+                    Page.PULSE -> PulsePage(back)
+                    Page.NOW_PLAYING -> NowPlayingPage(back)
+                    Page.UDFPS -> UdfpsPage(back)
+                }
             }
         }
     }
