@@ -64,6 +64,7 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     // Opened again on another page, e.g. from Singularity: start over there.
     LaunchedEffect(start) { if (stack.first() != start) stack = listOf(start) }
     var askRestart by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val saved = rememberSaveableStateHolder()
     val backdrop = rememberBackdrop()
     val open: (Page) -> Unit = { stack = stack + it }
@@ -106,7 +107,7 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
             title = { Text(stringResource(R.string.systemui_restart_title)) },
             text = { Text(stringResource(R.string.systemui_restart_message)) },
             confirmButton = {
-                TextButton({ askRestart = false; Lunaris.restartSystemUI() }) {
+                TextButton({ askRestart = false; Lunaris.restartSystemUI(context) }) {
                     Text(stringResource(R.string.systemui_restart_yes))
                 }
             },

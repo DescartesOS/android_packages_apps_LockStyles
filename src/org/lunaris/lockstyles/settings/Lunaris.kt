@@ -30,11 +30,27 @@ object Lunaris {
     private val OMNIJAWS_SETTINGS = Uri.parse("content://org.omnirom.omnijaws.provider/settings")
     private const val PROP_CUSTOM_UDFPS = "persist.sys.udfps.custom"
 
-    /** Restarts SystemUI through the status bar service, as Singularity does. */
-    fun restartSystemUI() {
-        runCatching { Class.forName(UTILS).getMethod("restartSystemUI").invoke(null) }
-            .onFailure { Log.w(TAG, "Could not restart SystemUI", it) }
+    /**
+     * Restarts SystemUI through the status bar service, as Singularity does. That takes the
+     * platform signature, so otherwise it's force-stopped, and comes straight back as it's
+     * persistent.
+     */
+    fun restartSystemUI(context: Context) {
+        if (context.checkSelfPermission(android.Manifest.permission.STATUS_BAR_SERVICE) ==
+                PackageManager.PERMISSION_GRANTED) {
+            runCatching { Class.forName(UTILS).getMethod("restartSystemUI").invoke(null) }
+                .onSuccess { return }
+                .onFailure { Log.w(TAG, "The status bar service did not restart SystemUI", it) }
+        }
+        runCatching {
+            context.getSystemService(android.app.ActivityManager::class.java)!!.javaClass
+                .getMethod("forceStopPackage", String::class.java)
+                .invoke(context.getSystemService(android.app.ActivityManager::class.java),
+                    SYSTEMUI)
+        }.onFailure { Log.w(TAG, "Could not restart SystemUI", it) }
     }
+
+    private const val SYSTEMUI = "com.android.systemui"
 
     private fun themeUtils(context: Context): Any? =
         runCatching {

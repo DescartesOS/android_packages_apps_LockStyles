@@ -321,7 +321,7 @@ object CustomClocks {
         if ((before == 0) != (style == 0)) {
             // Lunaris applies the stock clock's hideclock overlays through ThemeOverlayController;
             // the rest of the keyguard only reads the style at startup.
-            org.lunaris.lockstyles.settings.Lunaris.restartSystemUI()
+            org.lunaris.lockstyles.settings.Lunaris.restartSystemUI(context)
         }
     }
 

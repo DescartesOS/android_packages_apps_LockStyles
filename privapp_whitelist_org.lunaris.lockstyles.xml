@@ -7,6 +7,7 @@
     <privapp-permissions package="org.lunaris.lockstyles">
         <permission name="android.permission.CHANGE_OVERLAY_PACKAGES" />
         <permission name="android.permission.CUSTOMIZE_SYSTEM_UI" />
+        <permission name="android.permission.FORCE_STOP_PACKAGES" />
         <permission name="android.permission.READ_WALLPAPER_INTERNAL" />
         <permission name="android.permission.SET_WALLPAPER_COMPONENT" />
         <permission name="android.permission.WRITE_MEDIA_STORAGE" />
