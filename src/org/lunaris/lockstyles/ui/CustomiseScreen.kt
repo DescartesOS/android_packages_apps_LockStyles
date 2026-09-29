@@ -2,6 +2,20 @@ package org.lunaris.lockstyles.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -83,6 +97,10 @@ import org.lunaris.lockstyles.Shortcuts
 import org.lunaris.lockstyles.R
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
+import kotlin.math.abs
+import kotlinx.coroutines.flow.distinctUntilChanged
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.rememberUpdatedState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -369,23 +387,7 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
                     Kind.WAVES -> GalleryRenderer.WAVE_VARIANTS
                     else -> GalleryRenderer.PETAL_VARIANTS
                 }
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    repeat(count) { i ->
-                        Box(
-                            Modifier.padding(horizontal = 6.dp).width(44.dp).aspectRatio(0.5f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .border(if (i == wallpaper.variant) 2.dp else 1.dp,
-                                    if (i == wallpaper.variant) Color.White else Color(0x55FFFFFF),
-                                    RoundedCornerShape(10.dp))
-                                .clickable { onChange(wallpaper.copy(variant = i)) },
-                        ) {
-                            WallpaperImage(wallpaper.copy(variant = i), Modifier.fillMaxSize())
-                        }
-                    }
-                }
+                VariantStrip(wallpaper, (0 until count).toList(), onChange)
             }
             Kind.WEATHER -> {}
             Kind.PAPER -> {
@@ -394,24 +396,107 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
                 val variants =
                     if (collection) 0 until GalleryRenderer.PAPER_COLLECTIONS
                     else GalleryRenderer.PAPER_COLLECTIONS until GalleryRenderer.PAPERS.size
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    variants.forEach { i ->
-                        Box(
-                            Modifier.padding(horizontal = 6.dp).width(44.dp).aspectRatio(0.5f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .border(if (i == wallpaper.variant) 2.dp else 1.dp,
-                                    if (i == wallpaper.variant) Color.White else Color(0x55FFFFFF),
-                                    RoundedCornerShape(10.dp))
-                                .clickable { onChange(wallpaper.copy(variant = i)) },
-                        ) {
-                            WallpaperImage(wallpaper.copy(variant = i), Modifier.fillMaxSize())
-                        }
-                    }
+                VariantStrip(wallpaper, variants.toList(), onChange)
+            }
+        }
+    }
+}
+
+/**
+ * The wallpaper's variants as a strip that scrolls and snaps to the middle. Like a picker
+ * wheel, whichever is in the middle is the chosen one, so the preview follows the scroll;
+ * tapping one brings it to the middle. The edges fade to show there's more.
+ */
+@Composable
+private fun VariantStrip(
+    wallpaper: GalleryWallpaper,
+    variants: List<Int>,
+    onChange: (GalleryWallpaper) -> Unit,
+) {
+    val haptics = LocalHapticFeedback.current
+    val state = rememberLazyListState(
+        initialFirstVisibleItemIndex = variants.indexOf(wallpaper.variant).coerceAtLeast(0))
+    val fling = rememberSnapFlingBehavior(state, SnapPosition.Center)
+    val current by rememberUpdatedState(wallpaper)
+    // Set when the scroll picked the variant, so the strip doesn't then scroll to it again.
+    val pickedByScroll = remember { booleanArrayOf(false) }
+    LaunchedEffect(state, variants) {
+        snapshotFlow {
+            val info = state.layoutInfo
+            val middle = (info.viewportStartOffset + info.viewportEndOffset) / 2
+            info.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2 - middle) }?.index
+        }.distinctUntilChanged().collect { index ->
+            val variant = index?.let(variants::getOrNull) ?: return@collect
+            if (state.isScrollInProgress && variant != current.variant) {
+                pickedByScroll[0] = true
+                haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onChange(current.copy(variant = variant))
+            }
+        }
+    }
+    LaunchedEffect(wallpaper.variant) {
+        if (pickedByScroll[0]) {
+            pickedByScroll[0] = false
+            return@LaunchedEffect
+        }
+        val index = variants.indexOf(wallpaper.variant)
+        if (index < 0) return@LaunchedEffect
+        val info = state.layoutInfo
+        val item = info.visibleItemsInfo.firstOrNull { it.index == index }
+        if (item == null) {
+            state.animateScrollToItem(index)
+        } else {
+            // Centre it: move by how far its middle is from the viewport's.
+            val middle = (info.viewportStartOffset + info.viewportEndOffset) / 2
+            state.animateScrollBy((item.offset + item.size / 2 - middle).toFloat(),
+                spring(stiffness = Spring.StiffnessMediumLow))
+        }
+    }
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val side = (maxWidth - VARIANT_WIDTH) / 2
+        LazyRow(
+            state = state,
+            flingBehavior = fling,
+            contentPadding = PaddingValues(horizontal = side),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth().height(VARIANT_WIDTH * 2 + 16.dp)
+                .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                .drawWithContent {
+                    drawContent()
+                    drawRect(Brush.horizontalGradient(
+                        0f to Color.Transparent, 0.12f to Color.Black,
+                        0.88f to Color.Black, 1f to Color.Transparent),
+                        blendMode = BlendMode.DstIn)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            items(variants, key = { it }) { i ->
+                val on = i == wallpaper.variant
+                val scale by animateFloatAsState(if (on) 1.12f else 0.94f,
+                    spring(dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMediumLow), label = "variant")
+                Box(
+                    Modifier.width(VARIANT_WIDTH).aspectRatio(0.5f)
+                        .graphicsLayer { scaleX = scale; scaleY = scale }
+                        .clip(RoundedCornerShape(12.dp))
+                        .border(if (on) 2.dp else 1.dp,
+                            if (on) Color.White else Color(0x55FFFFFF), RoundedCornerShape(12.dp))
+                        .alpha(if (on) 1f else 0.75f)
+                        .clickable {
+                            if (!on) {
+                                haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                onChange(wallpaper.copy(variant = i))
+                            }
+                        },
+                ) {
+                    WallpaperImage(wallpaper.copy(variant = i), Modifier.fillMaxSize())
                 }
             }
         }
     }
 }
+
+private val VARIANT_WIDTH = 52.dp
 
 @Composable
 private fun ClockSheet(

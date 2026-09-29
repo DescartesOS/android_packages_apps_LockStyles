@@ -5,6 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -87,17 +90,23 @@ fun WallpaperImage(
         val context = LocalContext.current
         val w = with(density) { maxWidth.roundToPx() }.coerceAtLeast(1)
         val h = with(density) { maxHeight.roundToPx() }.coerceAtLeast(1)
-        val bitmap by produceState<Bitmap?>(null, wallpaper, w, h, weather) {
-            value = withContext(Dispatchers.Default) {
+        // The last one stays up until the next is drawn, so switching crossfades rather than
+        // flashing empty, e.g. while scrolling through variants.
+        var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+        LaunchedEffect(wallpaper, w, h, weather) {
+            bitmap = withContext(Dispatchers.Default) {
                 Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
                     GalleryRenderer.draw(context, android.graphics.Canvas(it), wallpaper, w, h,
                         weather = weather)
                 }
             }
         }
-        bitmap?.let {
-            Image(it.asImageBitmap(), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-        } ?: Box(Modifier.fillMaxSize().background(Color(0xFF1C1C1E)))
+        Crossfade(bitmap, animationSpec = tween(180), label = "wallpaper") { shown ->
+            shown?.let {
+                Image(it.asImageBitmap(), null, Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop)
+            } ?: Box(Modifier.fillMaxSize().background(Color(0xFF1C1C1E)))
+        }
     }
 }
 
