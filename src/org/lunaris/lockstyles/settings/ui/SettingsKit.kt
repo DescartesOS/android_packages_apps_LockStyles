@@ -50,6 +50,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -88,40 +89,15 @@ import org.lunaris.lockstyles.settings.state
 val Accent = Color(0xFFB9A7FF)
 private val OnGlass = Color.White
 private val OnGlassDim = Color(0xB3FFFFFF)
-private val Glass = Color(0x1FFFFFFF)
-private val GlassPressed = Color(0x33FFFFFF)
-private val Hairline = Color(0x1AFFFFFF)
 private const val OUTER = 26
 private const val INNER = 6
 
-/** The blurred lock screen wallpaper every settings page sits on. */
+/** The page every settings screen sits on: the glass backdrop, which the surfaces bend. */
 @Composable
 fun GlassBackdrop(content: @Composable () -> Unit) {
-    val context = LocalContext.current
-    val wallpaper by produceState<Bitmap?>(null) {
-        value = withContext(Dispatchers.IO) {
-            runCatching {
-                val wm = WallpaperManager.getInstance(context)
-                (wm.getDrawable(WallpaperManager.FLAG_LOCK) ?: wm.drawable)?.let { d ->
-                    // Small is enough under this much blur, and much cheaper to blur.
-                    val w = 270
-                    val h = 600
-                    Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
-                        d.setBounds(0, 0, w, h)
-                        d.draw(android.graphics.Canvas(it))
-                    }
-                }
-            }.getOrNull()
-        }
-    }
-    Box(Modifier.fillMaxSize().background(Color(0xFF0B0B10))) {
-        wallpaper?.let {
-            Image(it.asImageBitmap(), null, contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize().blur(60.dp))
-        }
-        Box(Modifier.fillMaxSize().background(Brush.verticalGradient(
-            listOf(Color(0x99000000), Color(0xCC000000)))))
-        content()
+    val backdrop = rememberBackdrop()
+    CompositionLocalProvider(LocalBackdrop provides backdrop) {
+        Box(Modifier.fillMaxSize().backdrop(backdrop)) { content() }
     }
 }
 
@@ -136,8 +112,8 @@ fun SettingsPage(title: String, onBack: () -> Unit, content: LazyListScope.() ->
             item {
                 Column(Modifier.statusBarsPadding().padding(horizontal = 16.dp)) {
                     Box(
-                        Modifier.padding(top = 8.dp).size(44.dp).clip(CircleShape)
-                            .background(Glass).clickable(onClick = onBack),
+                        Modifier.padding(top = 8.dp).size(44.dp).liquidGlass(22.dp)
+                            .clip(CircleShape).clickable(onClick = onBack),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, null, tint = OnGlass)
@@ -177,9 +153,10 @@ fun Group(title: String?, rows: List<@Composable (RowShape) -> Unit>) {
 }
 
 class RowShape(first: Boolean, last: Boolean) {
-    val shape = RoundedCornerShape(
-        topStart = (if (first) OUTER else INNER).dp, topEnd = (if (first) OUTER else INNER).dp,
-        bottomStart = (if (last) OUTER else INNER).dp, bottomEnd = (if (last) OUTER else INNER).dp)
+    val top = (if (first) OUTER else INNER).dp
+    val bottom = (if (last) OUTER else INNER).dp
+    val shape = RoundedCornerShape(topStart = top, topEnd = top, bottomStart = bottom,
+        bottomEnd = bottom)
 }
 
 @Composable
@@ -191,8 +168,9 @@ private fun GlassRow(
 ) {
     val haptics = LocalHapticFeedback.current
     Box(
-        Modifier.fillMaxWidth().clip(shape.shape).background(Glass)
-            .border(0.5.dp, Hairline, shape.shape)
+        Modifier.fillMaxWidth()
+            .liquidGlass(shape.top, shape.top, shape.bottom, shape.bottom)
+            .clip(shape.shape)
             .then(if (onClick != null && enabled) Modifier.clickable {
                 haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 onClick()
@@ -227,11 +205,11 @@ fun LazyListScope.mainSwitch(title: String, setting: LockSetting<Boolean>,
         onChange: (Boolean) -> Unit = {}) {
     item {
         var on by setting.state()
-        val bg by animateColorAsState(if (on) Accent.copy(alpha = 0.35f) else Glass,
+        val bg by animateColorAsState(if (on) Accent.copy(alpha = 0.28f) else Color.Transparent,
             label = "main")
         Row(
             Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()
-                .clip(RoundedCornerShape(OUTER.dp)).background(bg)
+                .liquidGlass(OUTER.dp).clip(RoundedCornerShape(OUTER.dp)).background(bg)
                 .clickable { on = !on; onChange(on) }
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically,

@@ -64,8 +64,6 @@ import org.lunaris.lockstyles.settings.LockSetting
 import org.lunaris.lockstyles.settings.Lunaris
 import org.lunaris.lockstyles.settings.state
 
-private val Tile = Color(0x1FFFFFFF)
-private val TileOn = Color(0x40B9A7FF)
 
 @Composable
 private fun PickerTitle(text: String) {
@@ -101,8 +99,8 @@ fun ClockStylePicker() {
                     style = index
                 }) {
                 Box(
-                    Modifier.fillMaxWidth().height(110.dp).clip(RoundedCornerShape(20.dp))
-                        .background(if (on) TileOn else Tile)
+                    Modifier.fillMaxWidth().height(110.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
+                        .clip(RoundedCornerShape(20.dp))
                         .border(if (on) 2.dp else 0.5.dp,
                             if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp))
                         .padding(8.dp),
@@ -158,8 +156,8 @@ fun ClockFontPicker() {
                     askRestart()
                 }) {
                 Box(
-                    Modifier.size(88.dp).clip(RoundedCornerShape(20.dp))
-                        .background(if (on) TileOn else Tile)
+                    Modifier.size(88.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
+                        .clip(RoundedCornerShape(20.dp))
                         .border(if (on) 2.dp else 0.5.dp,
                             if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp)),
                     contentAlignment = Alignment.Center,
@@ -309,8 +307,8 @@ fun UdfpsResourcePicker(title: String, pack: UdfpsPacks, setting: LockSetting<In
                     selected = item.index
                 }) {
                 Box(
-                    Modifier.size(88.dp).clip(RoundedCornerShape(20.dp))
-                        .background(if (on) TileOn else Tile)
+                    Modifier.size(88.dp).liquidGlass(20.dp, tint = if (on) 0x40B9A7FF else 0x14FFFFFF)
+                        .clip(RoundedCornerShape(20.dp))
                         .border(if (on) 2.dp else 0.5.dp,
                             if (on) Accent else Color(0x1AFFFFFF), RoundedCornerShape(20.dp)),
                     contentAlignment = Alignment.Center,
