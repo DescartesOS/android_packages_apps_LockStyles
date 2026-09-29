@@ -142,7 +142,7 @@ fun GalleryScreen(
 
             item {
                 val tiles = mutableListOf(Tile(GalleryWallpaper(Kind.PAPER),
-                    stringResource(R.string.gallery_collections)))
+                    stringResource(R.string.gallery_wallwidgy)))
                 featured.forEachIndexed { i, (_, taken) ->
                     tiles += Tile(featuredPhotos[i], month(taken))
                 }
@@ -171,7 +171,8 @@ fun GalleryScreen(
                 val tiles = (0 until GalleryRenderer.PAPER_COLLECTIONS).map {
                     Tile(GalleryWallpaper(Kind.PAPER, it))
                 }
-                Section(stringResource(R.string.gallery_collections), null, true, tiles, weather,
+                Section(stringResource(R.string.gallery_wallwidgy),
+                    stringResource(R.string.gallery_wallwidgy_credit), true, tiles, weather,
                     onPick)
             }
 

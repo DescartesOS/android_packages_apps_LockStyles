@@ -80,7 +80,7 @@ fun wallpaperLabel(wallpaper: GalleryWallpaper): Int = when (wallpaper.kind) {
     Kind.BUBBLES, Kind.STRIPES, Kind.WAVES -> R.string.gallery_collections
     Kind.PETALS -> R.string.gallery_petals
     Kind.PAPER -> if (GalleryRenderer.isCollectionPaper(wallpaper.variant)) {
-        R.string.gallery_collections
+        R.string.gallery_wallwidgy
     } else {
         R.string.gallery_lunaris
     }
