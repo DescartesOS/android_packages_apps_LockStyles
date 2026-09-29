@@ -111,8 +111,8 @@ fun SettingsPage(title: String, onBack: () -> Unit, content: LazyListScope.() ->
             item {
                 Column(Modifier.statusBarsPadding().padding(horizontal = 16.dp)) {
                     Box(
-                        Modifier.padding(top = 8.dp).size(44.dp).liquidGlass(16.dp)
-                            .clip(SquircleShape(16.dp)).clickable(onClick = onBack),
+                        Modifier.padding(top = 8.dp).size(44.dp).liquidGlass()
+                            .clip(GlassShape()).clickable(onClick = onBack),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, null, tint = OnGlass)
@@ -151,9 +151,9 @@ fun Group(title: String?, rows: List<@Composable (RowShape) -> Unit>) {
     }
 }
 
-/** Where a row sits in its group; every row is the same squircle, whatever its place. */
+/** Where a row sits in its group; every row is the same capsule, whatever its place. */
 class RowShape(val first: Boolean, val last: Boolean) {
-    val shape = SquircleShape()
+    val shape = GlassShape()
 }
 
 @Composable
@@ -206,7 +206,7 @@ fun LazyListScope.mainSwitch(title: String, setting: LockSetting<Boolean>,
             label = "main")
         Row(
             Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()
-                .liquidGlass().clip(SquircleShape()).background(bg)
+                .liquidGlass().clip(GlassShape()).background(bg)
                 .clickable { on = !on; onChange(on) }
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -356,7 +356,7 @@ fun navRow(
     GlassRow(shape, enabled, onClick = onClick) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (icon != null) {
-                Box(Modifier.size(40.dp).clip(SquircleShape(12.dp))
+                Box(Modifier.size(40.dp).clip(GlassShape())
                     .background(Accent.copy(alpha = 0.22f)),
                     contentAlignment = Alignment.Center) {
                     Icon(icon, null, tint = Accent, modifier = Modifier.size(22.dp))

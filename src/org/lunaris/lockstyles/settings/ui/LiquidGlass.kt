@@ -100,24 +100,22 @@ uniform float dispersion;   // colour split at the rim
 uniform half4 tint;         // premultiplied
 uniform float rim;          // edge light strength
 
-// A squircle: rounded corners that ease into the sides, as Apple's continuous corners.
-float squircle(float2 p, float2 b, float r) {
+// A capsule: round ends, or large round corners once it's taller than the radius allows.
+float capsule(float2 p, float2 b, float r) {
     float2 q = abs(p) - b + r;
-    float2 m = max(q, 0.0) / r;
-    float corner = r * (pow(pow(m.x, 4.0) + pow(m.y, 4.0), 0.25) - 1.0);
-    return min(max(q.x, q.y), 0.0) + corner;
+    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
 }
 
 half4 main(float2 p) {
     float2 half_ = size * 0.5;
     float2 c = p - half_;
-    float sd = squircle(c, half_, radius);
+    float sd = capsule(c, half_, radius);
     if (sd > 1.0) return half4(0.0);
 
-    float2 n = float2(squircle(c + float2(1.0, 0.0), half_, radius) -
-                          squircle(c - float2(1.0, 0.0), half_, radius),
-                      squircle(c + float2(0.0, 1.0), half_, radius) -
-                          squircle(c - float2(0.0, 1.0), half_, radius));
+    float2 n = float2(capsule(c + float2(1.0, 0.0), half_, radius) -
+                          capsule(c - float2(1.0, 0.0), half_, radius),
+                      capsule(c + float2(0.0, 1.0), half_, radius) -
+                          capsule(c - float2(0.0, 1.0), half_, radius));
     n = n / max(length(n), 1e-4);
 
     // A convex slab: flat in the middle, bending harder towards the rim.
@@ -128,37 +126,41 @@ half4 main(float2 p) {
     half3 col = half3(backdrop.eval(at - split).r, backdrop.eval(at).g,
                       backdrop.eval(at + split).b);
 
-    // Clear glass: what's behind a little brighter and richer, under a milky tint.
+    // Clear glass: what's behind stays clear, just a touch brighter and richer.
     half luma = dot(col, half3(0.2126, 0.7152, 0.0722));
-    col = mix(half3(luma), col, 1.2) * 1.1;
+    col = mix(half3(luma), col, 1.15) * 1.06;
     col = col * (1.0 - tint.a) + tint.rgb;
 
-    // A soft glow just inside the rim, as light gathers in the edge of the glass.
-    col += half3(0.10 * (1.0 - t) * (1.0 - t));
+    // A faint glow just inside the rim, as light gathers in the edge of the glass.
+    col += half3(0.05 * (1.0 - t) * (1.0 - t));
 
-    // A thin light line all round, with strong glints on the lit and the opposite corner.
-    float line = smoothstep(1.6, 0.0, -sd);
+    // Light catches the rim where it faces the light, and a little on the far side; the
+    // rest of the edge barely shows, so it reads as glass rather than a border.
+    float line = smoothstep(1.2, 0.0, -sd);
     float facing = dot(n, normalize(float2(-0.6, -0.8)));
-    float glint = pow(max(facing, 0.0), 3.0) + 0.6 * pow(max(-facing, 0.0), 3.0);
-    col += half3(line * rim * (0.35 + 0.65 * glint));
+    float glint = pow(max(facing, 0.0), 2.0) + 0.5 * pow(max(-facing, 0.0), 2.0);
+    col += half3(line * rim * (0.08 + 0.92 * glint));
 
     float a = clamp(0.5 - sd, 0.0, 1.0);
     return half4(col * a, a);
 }
 """
 
-/** The one corner radius every glass surface uses. */
-val GlassRadius = 24.dp
+/**
+ * The corner radius every glass surface uses, capped at half its height: short surfaces are
+ * capsules with round ends, squares are circles and tall ones get large round corners.
+ */
+val GlassRadius = 36.dp
 
 /**
- * Draws this element as a squircle of liquid glass over [LocalBackdrop]. Without a backdrop
+ * Draws this element as a capsule of liquid glass over [LocalBackdrop]. Without a backdrop
  * yet, it falls back to a plain translucent fill.
  */
 fun Modifier.liquidGlass(
     radius: Dp = GlassRadius,
     refraction: Dp = 14.dp,
     depth: Dp = 22.dp,
-    tint: Int = 0x24FFFFFF,
+    tint: Int = 0x0FFFFFFF,
     rim: Float = 0.9f,
 ): Modifier = composed {
     val backdrop = LocalBackdrop.current
@@ -176,7 +178,7 @@ fun Modifier.liquidGlass(
                 setInputShader("backdrop", backdrop.shader)
                 setFloatUniform("size", size.width, size.height)
                 with(density) {
-                    // Never more than half the short side, so small tiles stay squircles.
+                    // Never more than half the short side: round ends, or a circle.
                     setFloatUniform("radius",
                         minOf(radius.toPx(), minOf(size.width, size.height) / 2f))
                     setFloatUniform("refraction", refraction.toPx())
@@ -209,38 +211,16 @@ fun Modifier.backdrop(backdrop: Backdrop?): Modifier = drawWithCache {
     }
 }
 
-/**
- * The same squircle as the glass, for clipping ripples and content to it: each corner is a
- * superellipse, |x|^4 + |y|^4 = r^4.
- */
-class SquircleShape(private val radius: Dp = GlassRadius) : androidx.compose.ui.graphics.Shape {
+/** The same capsule as the glass, for clipping ripples and content to it. */
+class GlassShape(private val radius: Dp = GlassRadius) : androidx.compose.ui.graphics.Shape {
     override fun createOutline(
         size: androidx.compose.ui.geometry.Size,
         layoutDirection: androidx.compose.ui.unit.LayoutDirection,
         density: androidx.compose.ui.unit.Density,
     ): androidx.compose.ui.graphics.Outline {
         val r = minOf(with(density) { radius.toPx() }, minOf(size.width, size.height) / 2f)
-        val path = androidx.compose.ui.graphics.Path()
-        // Corner centres, clockwise from the top right, with the quarter each one draws.
-        val corners = listOf(
-            Triple(size.width - r, r, 270.0), Triple(size.width - r, size.height - r, 0.0),
-            Triple(r, size.height - r, 90.0), Triple(r, r, 180.0))
-        corners.forEachIndexed { i, (cx, cy, start) ->
-            for (step in 0..STEPS) {
-                val t = Math.toRadians(start + 90.0 * step / STEPS)
-                val cos = Math.cos(t)
-                val sin = Math.sin(t)
-                val x = cx + r * Math.signum(cos) * Math.sqrt(Math.abs(cos))
-                val y = cy + r * Math.signum(sin) * Math.sqrt(Math.abs(sin))
-                if (i == 0 && step == 0) path.moveTo(x.toFloat(), y.toFloat())
-                else path.lineTo(x.toFloat(), y.toFloat())
-            }
-        }
-        path.close()
-        return androidx.compose.ui.graphics.Outline.Generic(path)
-    }
-
-    private companion object {
-        const val STEPS = 16
+        return androidx.compose.ui.graphics.Outline.Rounded(
+            androidx.compose.ui.geometry.RoundRect(0f, 0f, size.width, size.height,
+                androidx.compose.ui.geometry.CornerRadius(r)))
     }
 }

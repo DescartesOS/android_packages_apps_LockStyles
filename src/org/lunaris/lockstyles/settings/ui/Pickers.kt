@@ -99,10 +99,10 @@ fun ClockStylePicker() {
                     style = index
                 }) {
                 Box(
-                    Modifier.fillMaxWidth().height(110.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
-                        .clip(SquircleShape())
+                    Modifier.fillMaxWidth().height(110.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x0FFFFFFF)
+                        .clip(GlassShape())
                         .border(if (on) 2.dp else 0.dp,
-                            if (on) Accent else Color.Transparent, SquircleShape())
+                            if (on) Accent else Color.Transparent, GlassShape())
                         .padding(8.dp),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -156,10 +156,10 @@ fun ClockFontPicker() {
                     askRestart()
                 }) {
                 Box(
-                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
-                        .clip(SquircleShape())
+                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x0FFFFFFF)
+                        .clip(GlassShape())
                         .border(if (on) 2.dp else 0.dp,
-                            if (on) Accent else Color.Transparent, SquircleShape()),
+                            if (on) Accent else Color.Transparent, GlassShape()),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text("12", color = Color.White, fontSize = 34.sp,
@@ -307,10 +307,10 @@ fun UdfpsResourcePicker(title: String, pack: UdfpsPacks, setting: LockSetting<In
                     selected = item.index
                 }) {
                 Box(
-                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x24FFFFFF)
-                        .clip(SquircleShape())
+                    Modifier.size(88.dp).liquidGlass(tint = if (on) 0x40B9A7FF else 0x0FFFFFFF)
+                        .clip(GlassShape())
                         .border(if (on) 2.dp else 0.dp,
-                            if (on) Accent else Color.Transparent, SquircleShape()),
+                            if (on) Accent else Color.Transparent, GlassShape()),
                     contentAlignment = Alignment.Center,
                 ) {
                     val bitmap = remember(item) {
