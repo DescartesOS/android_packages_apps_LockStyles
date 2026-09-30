@@ -47,24 +47,7 @@ object Keys {
     val POWER_MENU = Bool(SYSTEM, "lockscreen_enable_power_menu", true)
 
     // Clock
-    val CLOCK_STYLE = Num(SECURE, "lock_screen_custom_clock_style", 0)
-    val CLOCK_ALBUM_ART_COLOR = Bool(SECURE, "lock_screen_custom_clock_album_art_color", false)
-    val CLOCK_COLOR_MODE = Text(SECURE, "lock_screen_custom_clock_color_mode", "default")
-    val CLOCK_CUSTOM_COLOR = Num(SECURE, "lock_screen_custom_clock_custom_color", -1)
-    val CLOCK_GRADIENT = Bool(SECURE, "lock_screen_custom_clock_gradient_enabled", false)
-    val CLOCK_GRADIENT_START =
-        Num(SECURE, "lock_screen_custom_clock_gradient_color_start", 0xFF00E5FF.toInt())
-    val CLOCK_GRADIENT_END =
-        Num(SECURE, "lock_screen_custom_clock_gradient_color_end", 0xFFFF2DAA.toInt())
-    val CLOCK_GRADIENT_ANCHOR_Y = Num(SECURE, "lock_screen_custom_clock_gradient_anchor_y", 50)
-    val CLOCK_GRADIENT_RADIUS = Num(SECURE, "lock_screen_custom_clock_gradient_radius", 100)
-    val CLOCK_SIZE = Num(SECURE, "lock_screen_custom_clock_size_scale", 100)
-    val CLOCK_OPACITY = Num(SECURE, "lock_screen_custom_clock_opacity", 100)
-    val CLOCK_MARGIN_TOP = Num(SECURE, "lock_screen_custom_clock_margin_top", 15)
-    val CLOCK_MARGIN_START = Num(SECURE, "lock_screen_custom_clock_margin_start", 0)
-    val CLOCK_WOBBLE = Bool(SECURE, "lock_screen_custom_clock_wobble_on_charge", true)
-    val CLOCK_AOD_ANIM = Bool(SECURE, "lock_screen_custom_clock_aod_anim", true)
-    val CLOCK_WEATHER = Bool(SECURE, "custom_clock_weather", false)
+    // The clock's style, colours, size and animations are the gallery's, in CustomClocks.
     val AOD_IMAGE = Bool(SYSTEM, "custom_aod_image_enabled", false)
     val AOD_IMAGE_URI = Text(SYSTEM, "custom_aod_image_uri", null)
 

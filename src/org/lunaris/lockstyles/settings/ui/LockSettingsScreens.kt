@@ -51,6 +51,7 @@ import org.lunaris.lockstyles.settings.Keys
 import org.lunaris.lockstyles.settings.Lunaris
 import org.lunaris.lockstyles.settings.LunarisImages
 import org.lunaris.lockstyles.settings.state
+import org.lunaris.lockstyles.ui.LockScreenGalleryActivity
 
 /** The pages of the lock screen settings, as Singularity's fragments were. */
 enum class Page { MAIN, CLOCK, WIDGETS, DEPTH, MEDIA_ART, PULSE, NOW_PLAYING, UDFPS }
@@ -246,7 +247,6 @@ private val CREDITS = listOf(
 private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {
     val s = strings()
     val context = LocalContext.current
-    val gradient by Keys.CLOCK_GRADIENT.state()
     val aodImage by Keys.AOD_IMAGE.state()
     var aodImageUri by Keys.AOD_IMAGE_URI.state()
     val pickAodImage = rememberLauncherForActivityResult(
@@ -255,11 +255,16 @@ private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {
         LunarisImages.save(context, uri, "lockscreen_aod_image", "LOCKSCREEN_CUSTOM_AOD_IMAGE")
             ?.let { aodImageUri = it }
     }
-    val colorModes = options(R.array.lockscreen_custom_clock_color_mode_entries,
-        R.array.lockscreen_custom_clock_color_mode_values)
 
+    // The clock's style, colours, size and animations belong to each lock screen, so they're
+    // set in its Customise screen; this page keeps what's the same for all of them.
     SettingsPage(s(R.string.ls_clock_title), back) {
-        item { ClockStylePicker() }
+        group(null, listOf(
+            navRow(s(R.string.clock_style_in_gallery), s(R.string.clock_style_in_gallery_summary),
+                Icons.Rounded.Schedule) {
+                context.startActivity(Intent(context, LockScreenGalleryActivity::class.java))
+            },
+        ))
         item { ClockFontPicker() }
         group(null, listOf(
             navRow(s(R.string.lockscreen_widgets_title),
@@ -270,8 +275,6 @@ private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {
                 s(R.string.depthwall_wallpaper_enabled_summary), Icons.Rounded.Layers) {
                 open(Page.DEPTH)
             },
-            switchRow(s(R.string.custom_clock_weather_title),
-                s(R.string.custom_clock_weather_summary), Keys.CLOCK_WEATHER),
             switchRow(s(R.string.lockscreen_custom_image_enabled_title),
                 s(R.string.lockscreen_custom_image_summary), Keys.AOD_IMAGE),
             actionRow(s(R.string.lockscreen_custom_image_title),
@@ -280,47 +283,6 @@ private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {
                 pickAodImage.launch(PickVisualMediaRequest(
                     ActivityResultContracts.PickVisualMedia.ImageOnly))
             },
-        ))
-        group(s(R.string.lockscreen_custom_clock_color_category_title), listOf(
-            switchRow(s(R.string.clock_album_art_color_title),
-                s(R.string.clock_album_art_color_summary), Keys.CLOCK_ALBUM_ART_COLOR),
-            choiceRow(s(R.string.lockscreen_custom_clock_color_mode_title),
-                Keys.CLOCK_COLOR_MODE, colorModes),
-            colorRow(s(R.string.custom_color), Keys.CLOCK_CUSTOM_COLOR),
-        ))
-        group(s(R.string.lockscreen_custom_clock_gradient_category_title), listOf(
-            switchRow(s(R.string.lockscreen_custom_clock_gradient_enabled_title),
-                s(R.string.lockscreen_custom_clock_gradient_enabled_summary), Keys.CLOCK_GRADIENT),
-            colorRow(s(R.string.lockscreen_custom_clock_gradient_start_title),
-                Keys.CLOCK_GRADIENT_START, enabled = gradient),
-            colorRow(s(R.string.lockscreen_custom_clock_gradient_end_title),
-                Keys.CLOCK_GRADIENT_END, enabled = gradient),
-            sliderRow(s(R.string.lockscreen_custom_clock_gradient_anchor_y_title),
-                s(R.string.lockscreen_custom_clock_gradient_anchor_y_summary),
-                Keys.CLOCK_GRADIENT_ANCHOR_Y, 0..100, unit = "%", enabled = gradient),
-            sliderRow(s(R.string.lockscreen_custom_clock_gradient_radius_title),
-                s(R.string.lockscreen_custom_clock_gradient_radius_summary),
-                Keys.CLOCK_GRADIENT_RADIUS, 25..200, unit = "%", enabled = gradient),
-        ))
-        group(s(R.string.lockscreen_custom_clock_layout_category_title), listOf(
-            sliderRow(s(R.string.clock_size_title), s(R.string.clock_size_summary),
-                Keys.CLOCK_SIZE, 50..150, unit = "%"),
-            sliderRow(s(R.string.lockscreen_custom_clock_opacity_title),
-                s(R.string.lockscreen_custom_clock_opacity_summary), Keys.CLOCK_OPACITY,
-                0..100, unit = "%"),
-            sliderRow(s(R.string.lockscreen_custom_clock_frame_margin_top_title),
-                s(R.string.lockscreen_custom_clock_frame_margin_top_summary),
-                Keys.CLOCK_MARGIN_TOP, 0..200, unit = " " + s(R.string.unit_pixels)),
-            sliderRow(s(R.string.lockscreen_custom_clock_frame_margin_start_title),
-                s(R.string.lockscreen_custom_clock_frame_margin_start_summary),
-                Keys.CLOCK_MARGIN_START, -200..200, unit = " " + s(R.string.unit_pixels)),
-        ))
-        group(s(R.string.lockscreen_custom_clock_animation_category_title), listOf(
-            switchRow(s(R.string.lock_screen_custom_clock_wobble_on_charge_title),
-                s(R.string.lock_screen_custom_clock_wobble_on_charge_summary), Keys.CLOCK_WOBBLE),
-            switchRow(s(R.string.lockscreen_custom_clock_aod_anim_title),
-                s(R.string.lockscreen_custom_clock_aod_anim_summary), Keys.CLOCK_AOD_ANIM),
-            footer(s(R.string.lockscreen_custom_clock_style_info)),
         ))
     }
 }
@@ -362,8 +324,7 @@ private fun DepthPage(back: () -> Unit) {
     var confirmClear by remember { mutableStateOf(false) }
     SettingsPage(s(R.string.depthwall_wallpaper_enabled_title), back) {
         group(null, listOf(
-            switchRow(s(R.string.depthwall_wallpaper_enabled_title),
-                s(R.string.depthwall_wallpaper_enabled_summary), Keys.DEPTH),
+            footer(s(R.string.depth_in_gallery)),
             actionRow(s(R.string.depthwall_extract_now_title),
                 s(R.string.depthwall_extract_now_summary), enabled = depth) {
                 if (!DepthExtractor.extractNow(context)) {

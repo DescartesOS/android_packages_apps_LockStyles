@@ -8,6 +8,9 @@
     <string name="lock_settings">Lock screen settings</string>
     <string name="apply_change">Apply</string>
     <string name="gallery_applied">Lock screen applied</string>
+    <string name="clock_style_in_gallery">Clock style</string>
+    <string name="clock_style_in_gallery_summary">Style, colour and size, set for each lock screen in Customise</string>
+    <string name="depth_in_gallery">The depth effect is turned on for each photo lock screen in Customise. These tune how it looks.</string>
     <string name="credits_title">Credits</string>
     <string name="credits_wallwidgy">Wallpapers, from WallWidgy</string>
     <string name="credits_gallery">The iOS style lock screen gallery, from PenguinOS</string>

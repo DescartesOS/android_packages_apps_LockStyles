@@ -71,50 +71,6 @@ private fun PickerTitle(text: String) {
         modifier = Modifier.padding(start = 28.dp, top = 16.dp, bottom = 8.dp))
 }
 
-/** Singularity's CustomClockPreview: every custom style, drawn as the lock screen draws it. */
-@Composable
-fun ClockStylePicker() {
-    val context = LocalContext.current
-    var style by Keys.CLOCK_STYLE.state()
-    val names by produceState(emptyList<String>()) {
-        value = withContext(Dispatchers.IO) { CustomClocks.names(context) }
-    }
-    if (names.isEmpty()) return
-    val width = with(LocalDensity.current) { 240.dp.roundToPx() }
-    PickerTitle(stringResource(R.string.lockscreen_custom_clock_style_title))
-    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        itemsIndexed(names) { index, name ->
-            val preview by produceState<Bitmap?>(null, index) {
-                value = withContext(Dispatchers.IO) {
-                    CustomClocks.preview(context, index, width, null, trim = true)
-                }
-            }
-            val on = index == style
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.width(120.dp).clickable {
-                    // As Singularity: the style, the stock clock's overlays, then SystemUI
-                    // restarts when switching between the stock clock and a custom one.
-                    CustomClocks.apply(context, index, null)
-                    style = index
-                }) {
-                Box(
-                    Modifier.fillMaxWidth().height(110.dp).pickTile(on)
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    preview?.let {
-                        Image(it.asImageBitmap(), name, modifier = Modifier.fillMaxWidth())
-                    } ?: Text(if (index == 0) "12:30" else "", color = Color.White,
-                        fontSize = 28.sp)
-                }
-                Text(name, color = Color.White, fontSize = 12.sp, maxLines = 1,
-                    modifier = Modifier.padding(top = 6.dp))
-            }
-        }
-    }
-}
-
 private const val FONT_CATEGORY = "android.theme.customization.lockscreen_clock_font"
 
 /** Singularity's LockClockFontsPreference: the clock font overlays, previewed in their font. */
