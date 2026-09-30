@@ -51,7 +51,7 @@
         <activity
             android:name=".settings.ui.LockSettingsActivity"
             android:label="@string/lock_settings"
-            android:theme="@style/Theme.LockStyles"
+            android:theme="@style/Theme.LockStyles.Settings"
             android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>

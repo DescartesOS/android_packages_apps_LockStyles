@@ -103,7 +103,6 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     if (askRestart) {
         AlertDialog(
             onDismissRequest = { askRestart = false },
-            containerColor = Color(0xF21C1B22),
             title = { Text(stringResource(R.string.systemui_restart_title)) },
             text = { Text(stringResource(R.string.systemui_restart_message)) },
             confirmButton = {
@@ -401,7 +400,6 @@ private fun DepthPage(back: () -> Unit) {
     if (confirmClear) {
         AlertDialog(
             onDismissRequest = { confirmClear = false },
-            containerColor = Color(0xF21C1B22),
             title = { Text(s(R.string.depthwall_clear_subject_title)) },
             text = { Text(s(R.string.depthwall_clear_subject_confirm_message)) },
             confirmButton = {
