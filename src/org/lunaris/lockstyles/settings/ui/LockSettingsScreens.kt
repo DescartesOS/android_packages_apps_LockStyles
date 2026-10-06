@@ -22,6 +22,14 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.RestartAlt
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.MoreHoriz
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Gesture
+import androidx.compose.material.icons.rounded.Dashboard
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.GraphicEq
@@ -51,6 +59,7 @@ import org.lunaris.lockstyles.settings.Keys
 import org.lunaris.lockstyles.settings.Lunaris
 import org.lunaris.lockstyles.settings.LunarisImages
 import org.lunaris.lockstyles.settings.state
+import org.lunaris.lockstyles.settings.ui.components.ModernConfirmDialog
 import org.lunaris.lockstyles.ui.LockScreenGalleryActivity
 
 /** The pages of the lock screen settings, as Singularity's fragments were. */
@@ -67,13 +76,11 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     var askRestart by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val saved = rememberSaveableStateHolder()
-    val backdrop = rememberBackdrop()
     val open: (Page) -> Unit = { stack = stack + it }
     val back: () -> Unit = { if (stack.size > 1) stack = stack.dropLast(1) else onExit() }
     BackHandler(onBack = back)
 
-    CompositionLocalProvider(LocalAskRestart provides { askRestart = true },
-            LocalBackdrop provides backdrop) {
+    CompositionLocalProvider(LocalAskRestart provides { askRestart = true }) {
         AnimatedContent(
             targetState = stack,
             transitionSpec = {
@@ -102,20 +109,12 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     }
 
     if (askRestart) {
-        AlertDialog(
-            onDismissRequest = { askRestart = false },
-            title = { Text(stringResource(R.string.systemui_restart_title)) },
-            text = { Text(stringResource(R.string.systemui_restart_message)) },
-            confirmButton = {
-                TextButton({ askRestart = false; Lunaris.restartSystemUI(context) }) {
-                    Text(stringResource(R.string.systemui_restart_yes))
-                }
-            },
-            dismissButton = {
-                TextButton({ askRestart = false }) {
-                    Text(stringResource(R.string.systemui_restart_not_now))
-                }
-            },
+        ModernConfirmDialog(
+            title = stringResource(R.string.systemui_restart_title),
+            message = stringResource(R.string.systemui_restart_message),
+            icon = Icons.Rounded.RestartAlt,
+            onConfirm = { askRestart = false; Lunaris.restartSystemUI(context) },
+            onDismiss = { askRestart = false },
         )
     }
 }
@@ -145,11 +144,11 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
     val vibrator = remember { Lunaris.hasVibrator(context) }
 
     SettingsPage(s(R.string.lock_screen_title), back) {
-        group(s(R.string.qs_clock_title), listOf(
+        group(s(R.string.qs_clock_title), Icons.Rounded.Schedule, listOf(
             navRow(s(R.string.ls_clock_title), s(R.string.ls_clock_summary),
                 Icons.Rounded.Schedule) { open(Page.CLOCK) },
         ))
-        group(s(R.string.lockscreen_interface_category), listOf(
+        group(s(R.string.lockscreen_interface_category), Icons.Rounded.Dashboard, listOf(
             navRow(s(R.string.ls_media_art_title), s(R.string.ls_media_art_summary),
                 Icons.Rounded.Image) { open(Page.MEDIA_ART) },
             switchRow(s(R.string.dynamic_bar_keyguard_music_pill),
@@ -175,7 +174,7 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
                 askRestart()
             },
         ))
-        group(s(R.string.lockscreen_weather_category), listOf(
+        group(s(R.string.lockscreen_weather_category), Icons.Rounded.WbSunny, listOf(
             switchRow(s(R.string.lockscreen_smartspace_title),
                 s(R.string.lockscreen_smartspace_summary), Keys.SMARTSPACE) { askRestart() },
             navRow(s(R.string.weather_settings_title), s(R.string.weather_settings_summary),
@@ -199,7 +198,7 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
                 s(R.string.lockscreen_weather_humidity_info_summary), Keys.WEATHER_HUMIDITY,
                 enabled = weatherOn),
         ))
-        group(s(R.string.gestures_title), buildList {
+        group(s(R.string.gestures_title), Icons.Rounded.Gesture, buildList {
             add(switchRow(s(R.string.lockscreen_doubletap_sleep_title),
                 s(R.string.lockscreen_doubletap_sleep_summary), Keys.DOUBLE_TAP_SLEEP))
             if (fingerprint && vibrator) {
@@ -214,16 +213,16 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
             }
         })
         if (Lunaris.hasCustomUdfps()) {
-            group(s(R.string.udfps_custom_title), listOf(
+            group(s(R.string.udfps_custom_title), Icons.Rounded.Fingerprint, listOf(
                 navRow(s(R.string.udfps_cust_title), s(R.string.udfps_cust_summary),
                     Icons.Rounded.Fingerprint) { open(Page.UDFPS) },
             ))
         }
-        group(s(R.string.misc_title), listOf(
+        group(s(R.string.misc_title), Icons.Rounded.MoreHoriz, listOf(
             switchRow(s(R.string.lockscreen_enable_power_menu_title),
                 s(R.string.lockscreen_enable_power_menu_summary), Keys.POWER_MENU),
         ))
-        group(s(R.string.credits_title), CREDITS.map { (name, role, url) ->
+        group(s(R.string.credits_title), Icons.Rounded.Favorite, CREDITS.map { (name, role, url) ->
             navRow(name, s(role)) {
                 runCatching {
                     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -359,20 +358,12 @@ private fun DepthPage(back: () -> Unit) {
         ))
     }
     if (confirmClear) {
-        AlertDialog(
-            onDismissRequest = { confirmClear = false },
-            title = { Text(s(R.string.depthwall_clear_subject_title)) },
-            text = { Text(s(R.string.depthwall_clear_subject_confirm_message)) },
-            confirmButton = {
-                TextButton({ confirmClear = false; subject = null }) {
-                    Text(stringResource(android.R.string.ok))
-                }
-            },
-            dismissButton = {
-                TextButton({ confirmClear = false }) {
-                    Text(stringResource(android.R.string.cancel))
-                }
-            },
+        ModernConfirmDialog(
+            title = s(R.string.depthwall_clear_subject_title),
+            message = s(R.string.depthwall_clear_subject_confirm_message),
+            icon = Icons.Rounded.Delete,
+            onConfirm = { confirmClear = false; subject = null },
+            onDismiss = { confirmClear = false },
         )
     }
 }
@@ -471,7 +462,7 @@ private fun NowPlayingPage(back: () -> Unit) {
                 s(R.string.nowplaying_artist_text_size_summary), Keys.NP_ARTIST_SIZE, 5..20,
                 unit = " sp", enabled = on),
         ))
-        group(s(R.string.nowplaying_display_title), listOf(
+        group(s(R.string.nowplaying_display_title), Icons.Rounded.Visibility, listOf(
             switchRow(s(R.string.nowplaying_show_on_lockscreen_title),
                 s(R.string.nowplaying_show_on_lockscreen_summary), Keys.NP_ON_LOCKSCREEN,
                 enabled = on),

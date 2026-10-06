@@ -35,6 +35,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import org.lunaris.lockstyles.settings.ui.components.ModernSettingsCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.rounded.TextFields
+import androidx.compose.material.icons.rounded.Fingerprint
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -65,11 +70,6 @@ import org.lunaris.lockstyles.settings.Lunaris
 import org.lunaris.lockstyles.settings.state
 
 
-@Composable
-private fun PickerTitle(text: String) {
-    Text(text, color = Accent, fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(start = 28.dp, top = 16.dp, bottom = 8.dp))
-}
 
 private const val FONT_CATEGORY = "android.theme.customization.lockscreen_clock_font"
 
@@ -94,9 +94,9 @@ fun ClockFontPicker() {
         }
     }
     if (fonts.size <= 1) return
-    PickerTitle(stringResource(R.string.theme_customization_lock_clock_title))
-    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    ModernSettingsCard(title = stringResource(R.string.theme_customization_lock_clock_title),
+        icon = Icons.Rounded.TextFields) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         itemsIndexed(fonts) { _, (pkg, typeface) ->
             val on = pkg == applied
             Column(horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,15 +112,16 @@ fun ClockFontPicker() {
                     Modifier.size(88.dp).pickTile(on),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("12", color = Color.White, fontSize = 34.sp,
+                    Text("12", color = MaterialTheme.colorScheme.onSurface, fontSize = 34.sp,
                         fontFamily = typeface?.let { FontFamily(it) })
                 }
                 Text(if (pkg == "android") stringResource(R.string.clock_font_default)
-                    else labelOf(context, pkg), color = Color.White, fontSize = 12.sp,
+                    else labelOf(context, pkg), color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp,
                     maxLines = 1, modifier = Modifier.padding(top = 6.dp))
             }
         }
     }
+}
 }
 
 private fun fontOf(context: Context, pkg: String): Typeface? = runCatching {
@@ -246,9 +247,8 @@ fun UdfpsResourcePicker(title: String, pack: UdfpsPacks, setting: LockSetting<In
     }
     if (items.isEmpty()) return
     val px = with(LocalDensity.current) { 64.dp.roundToPx() }
-    PickerTitle(title)
-    LazyRow(contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ModernSettingsCard(title = title, icon = Icons.Rounded.Fingerprint) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.alpha(if (enabled) 1f else 0.4f)) {
         itemsIndexed(items) { _, item ->
             val on = item.index == selected
@@ -271,10 +271,11 @@ fun UdfpsResourcePicker(title: String, pack: UdfpsPacks, setting: LockSetting<In
                     bitmap?.let { Image(it.asImageBitmap(), item.title, Modifier.size(64.dp)) }
                 }
                 item.title?.let {
-                    Text(it, color = Color.White, fontSize = 12.sp, maxLines = 1,
+                    Text(it, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp, maxLines = 1,
                         modifier = Modifier.padding(top = 6.dp))
                 }
             }
         }
     }
+}
 }
