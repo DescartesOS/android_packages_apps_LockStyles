@@ -56,6 +56,11 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import org.lunaris.lockstyles.settings.ui.components.squishable
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -107,7 +112,8 @@ import kotlinx.coroutines.withContext
 private val CLOCK_COLOURS = listOf(null, 0xFFFFFFFF.toInt(), 0xFFFFD60A.toInt(),
     0xFFFF9F0A.toInt(), 0xFFFF6482.toInt(), 0xFFBF5AF2.toInt(), 0xFF64D2FF.toInt(),
     0xFF30D158.toInt(), 0xFF8E8E93.toInt(), 0xFF1C1C1E.toInt())
-private val ACCENT = Color(0xFF0A84FF)
+private val ACCENT: Color
+    @Composable get() = MaterialTheme.colorScheme.primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -173,10 +179,10 @@ fun CustomiseScreen(
             Modifier.statusBarsPadding().fillMaxWidth().padding(horizontal = 20.dp,
                 vertical = 12.dp).alpha(appear.value),
         ) {
-            Pill(stringResource(android.R.string.cancel), Color(0xCC2C2C2E), onCancel)
+            Pill(stringResource(android.R.string.cancel), primary = false, onCancel)
             Spacer(Modifier.weight(1f))
             Pill(stringResource(if (isNew) R.string.gallery_add else R.string.gallery_done),
-                ACCENT) {
+                primary = true) {
                 // An effect plays from the lock screen into the home screen, so it's a pair.
                 if (wallpaper.effect != 0) {
                     onDone(initial.copy(wallpaper = wallpaper, clock = clock,
@@ -186,11 +192,10 @@ fun CustomiseScreen(
         }
 
         Column(
-            Modifier.align(Alignment.BottomCenter).fillMaxWidth()
-                .background(Brush.verticalGradient(listOf(Color.Transparent,
-                    Color(0xCC000000))))
-                .navigationBarsPadding().padding(bottom = 16.dp, top = 40.dp)
-                .alpha(appear.value),
+            Modifier.align(Alignment.BottomCenter).fillMaxWidth().alpha(appear.value)
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.94f))
+                .navigationBarsPadding().padding(bottom = 16.dp, top = 20.dp),
         ) {
             KindControls(wallpaper) { wallpaper = it }
             Row(
@@ -208,12 +213,12 @@ fun CustomiseScreen(
     }
 
     if (sheet == "clock") {
-        ModalBottomSheet(onDismissRequest = { sheet = null }, containerColor = Color(0xFF1C1C1E)) {
+        ModalBottomSheet(onDismissRequest = { sheet = null }, containerColor = MaterialTheme.colorScheme.surfaceContainer) {
             ClockSheet(clock, tuning, { clock = it }, { tuning = it })
         }
     }
     if (sheet == "shortcuts") {
-        ModalBottomSheet(onDismissRequest = { sheet = null }, containerColor = Color(0xFF1C1C1E)) {
+        ModalBottomSheet(onDismissRequest = { sheet = null }, containerColor = MaterialTheme.colorScheme.surfaceContainer) {
             ShortcutsSheet(shortcuts)
         }
     }
@@ -226,12 +231,17 @@ fun CustomiseScreen(
 }
 
 @Composable
-private fun Pill(text: String, color: Color, onClick: () -> Unit) {
-    Box(
-        Modifier.clip(RoundedCornerShape(22.dp)).background(color).clickable(onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 10.dp),
+private fun Pill(text: String, primary: Boolean, onClick: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(50),
+        color = if (primary) colors.primary else colors.surfaceContainerHigh,
+        modifier = Modifier.squishable(),
     ) {
-        Text(text, color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
+        Text(text, color = if (primary) colors.onPrimary else colors.onSurface,
+            style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(horizontal = 22.dp, vertical = 10.dp))
     }
 }
 
@@ -239,11 +249,14 @@ private fun Pill(text: String, color: Color, onClick: () -> Unit) {
 private fun RoundAction(icon: ImageVector, label: String, onClick: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clickable(onClick = onClick)) {
-        Box(Modifier.size(52.dp).clip(CircleShape).background(Color(0x993A3A3C)),
+        Box(Modifier.size(56.dp).squishable().clip(CircleShape)
+            .background(MaterialTheme.colorScheme.secondaryContainer),
             contentAlignment = Alignment.Center) {
-            Icon(icon, null, tint = Color.White, modifier = Modifier.size(24.dp))
+            Icon(icon, null, tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.size(24.dp))
         }
-        Text(label, color = Color.White, fontSize = 13.sp, modifier = Modifier.padding(top = 6.dp))
+        Text(label, color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 6.dp))
     }
 }
 
@@ -256,13 +269,14 @@ private fun Chips(labels: List<String>, selected: Int, onSelect: (Int) -> Unit) 
     ) {
         labels.forEachIndexed { i, label ->
             val on = i == selected
+            val colors = MaterialTheme.colorScheme
             Box(
-                Modifier.clip(RoundedCornerShape(18.dp))
-                    .background(if (on) Color.White else Color(0x993A3A3C))
+                Modifier.squishable().clip(RoundedCornerShape(50))
+                    .background(if (on) colors.primary else colors.surfaceContainerHighest)
                     .clickable { onSelect(i) }.padding(horizontal = 16.dp, vertical = 8.dp),
             ) {
-                Text(label, color = if (on) Color.Black else Color.White, fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium)
+                Text(label, color = if (on) colors.onPrimary else colors.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -279,8 +293,8 @@ private fun Swatches(colors: List<Int?>, selected: Int?, onSelect: (Int?) -> Uni
             val on = c == selected
             Box(
                 Modifier.size(38.dp).clip(CircleShape)
-                    .border(if (on) 3.dp else 1.dp, if (on) Color.White else Color(0x55FFFFFF),
-                        CircleShape)
+                    .border(if (on) 3.dp else 1.dp, if (on) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.outlineVariant, CircleShape)
                     .padding(if (on) 5.dp else 0.dp).clip(CircleShape)
                     .background(if (c == null) Brush.sweepGradient(listOf(Color.Red,
                         Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta,
@@ -302,18 +316,24 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
                     stringResource(R.string.gallery_filter_wash)), wallpaper.variant) {
                     onChange(wallpaper.copy(variant = it))
                 }
-                Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f)) {
-                        Text(stringResource(R.string.gallery_depth), color = Color.White,
-                            fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                        Text(stringResource(R.string.gallery_depth_summary),
-                            color = Color(0xB3FFFFFF), fontSize = 13.sp)
+                Surface(shape = MaterialTheme.shapes.large,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+                    Row(Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f).padding(end = 12.dp)) {
+                            Text(stringResource(R.string.gallery_depth),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface)
+                            Text(stringResource(R.string.gallery_depth_summary),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        ThumbSwitch(wallpaper.depth) { onChange(wallpaper.copy(depth = it)) }
                     }
-                    Switch(wallpaper.depth, { onChange(wallpaper.copy(depth = it)) },
-                        colors = switchColors())
                 }
-                Text(stringResource(R.string.gallery_effect), color = Color.White,
+                Text(stringResource(R.string.gallery_effect), color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp, fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(horizontal = 20.dp))
                 Chips(GalleryEffect.entries.map { stringResource(it.label) }, wallpaper.effect) {
@@ -340,7 +360,8 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
             Kind.EMOJI -> {
                 Box(
                     Modifier.padding(horizontal = 16.dp).fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp)).background(Color(0x993A3A3C))
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                 ) {
                     BasicTextField(
@@ -349,9 +370,9 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
                             val emojis = GalleryRenderer.splitEmoji(text).take(6)
                             onChange(wallpaper.copy(emojis = emojis.joinToString("")))
                         },
-                        textStyle = TextStyle(fontSize = 26.sp, color = Color.White,
+                        textStyle = TextStyle(fontSize = 26.sp, color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Center),
-                        cursorBrush = SolidColor(Color.White),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -480,7 +501,7 @@ private fun VariantStrip(
                         .graphicsLayer { scaleX = scale; scaleY = scale }
                         .clip(RoundedCornerShape(12.dp))
                         .border(if (on) 2.dp else 1.dp,
-                            if (on) Color.White else Color(0x55FFFFFF), RoundedCornerShape(12.dp))
+                            if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
                         .alpha(if (on) 1f else 0.75f)
                         .clickable {
                             if (!on) {
@@ -515,7 +536,7 @@ private fun ClockSheet(
         .verticalScroll(rememberScrollState()).navigationBarsPadding().padding(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)) {
         if (styles.size > 1) {
-            Text(stringResource(R.string.gallery_clock_style), color = Color.White,
+            Text(stringResource(R.string.gallery_clock_style), color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp, fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp))
             LazyRow(
@@ -530,9 +551,9 @@ private fun ClockSheet(
                         Box(
                             Modifier.fillMaxWidth().height(96.dp)
                                 .clip(RoundedCornerShape(14.dp))
-                                .background(if (on) Color(0xFF48484A) else Color(0xFF2C2C2E))
+                                .background(if (on) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest)
                                 .border(if (on) 2.dp else 0.dp,
-                                    if (on) Color.White else Color.Transparent,
+                                    if (on) MaterialTheme.colorScheme.primary else Color.Transparent,
                                     RoundedCornerShape(14.dp))
                                 .padding(6.dp),
                             contentAlignment = Alignment.Center,
@@ -540,14 +561,14 @@ private fun ClockSheet(
                             LockClock(clock.copy(face = face, small = face == 0),
                                 if (face == 0) 30.dp else 84.dp, 92.dp, fixedTime = face == 0)
                         }
-                        Text(name, color = Color.White, fontSize = 12.sp, maxLines = 1,
+                        Text(name, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp, maxLines = 1,
                             modifier = Modifier.padding(top = 4.dp))
                     }
                 }
             }
         }
         if (clock.face == 0) {
-            Text(stringResource(R.string.gallery_clock_font), color = Color.White,
+            Text(stringResource(R.string.gallery_clock_font), color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp, fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp))
             Row(
@@ -560,9 +581,9 @@ private fun ClockSheet(
                     Box(
                         Modifier.size(width = 64.dp, height = 72.dp)
                             .clip(RoundedCornerShape(14.dp))
-                            .background(if (on) Color(0xFF48484A) else Color(0xFF2C2C2E))
+                            .background(if (on) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest)
                             .border(if (on) 2.dp else 0.dp,
-                                if (on) Color.White else Color.Transparent,
+                                if (on) MaterialTheme.colorScheme.primary else Color.Transparent,
                                 RoundedCornerShape(14.dp))
                             .clickable { onChange(clock.copy(preset = i)) },
                         contentAlignment = Alignment.Center,
@@ -574,7 +595,7 @@ private fun ClockSheet(
             }
             Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.gallery_clock_rounded), color = Color.White,
+                Text(stringResource(R.string.gallery_clock_rounded), color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp, modifier = Modifier.weight(1f))
                 Switch(clock.rounded, { onChange(clock.copy(rounded = it)) },
                     colors = switchColors())
@@ -582,7 +603,7 @@ private fun ClockSheet(
         }
         // Some custom styles keep their own colours on the lock screen.
         if (clock.face == 0 || CustomClocks.isColourable(clock.face)) {
-            Text(stringResource(R.string.gallery_clock_colour), color = Color.White,
+            Text(stringResource(R.string.gallery_clock_colour), color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp, fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp))
             if (clock.face > 0) {
@@ -620,7 +641,7 @@ private fun ClockSheet(
             }
         }
         if (clock.face > 0) {
-            Text(stringResource(R.string.gallery_clock_adjust), color = Color.White,
+            Text(stringResource(R.string.gallery_clock_adjust), color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp, fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp))
             TuningSlider(stringResource(R.string.gallery_clock_size), tuning.scale, 50..150, "%") {
@@ -657,18 +678,20 @@ private val GRADIENT_COLOURS = listOf(0xFF00E5FF.toInt(), 0xFFFF2DAA.toInt(),
     0xFF0A84FF.toInt(), 0xFFFFFFFF.toInt())
 
 @Composable
-private fun switchColors() = SwitchDefaults.colors(
-    checkedThumbColor = Color.White,
-    checkedTrackColor = ACCENT,
-    checkedBorderColor = ACCENT,
-    uncheckedThumbColor = Color(0xFFAEAEB2),
-    uncheckedTrackColor = Color(0xFF3A3A3C),
-    uncheckedBorderColor = Color(0xFF3A3A3C),
-)
+private fun switchColors() = SwitchDefaults.colors()
+
+/** A switch with a check or a cross in its thumb, as the settings use. */
+@Composable
+private fun ThumbSwitch(checked: Boolean, onChange: (Boolean) -> Unit) {
+    Switch(checked, onChange, thumbContent = {
+        Icon(if (checked) Icons.Rounded.Check else Icons.Rounded.Close, null,
+            modifier = Modifier.size(16.dp))
+    })
+}
 
 @Composable
 private fun SheetLabel(text: String) {
-    Text(text, color = Color(0xB3FFFFFF), fontSize = 14.sp,
+    Text(text, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp,
         modifier = Modifier.padding(horizontal = 20.dp))
 }
 
@@ -682,15 +705,15 @@ private fun TuningSlider(
 ) {
     Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, color = Color.White, fontSize = 16.sp, modifier = Modifier.weight(1f))
-            Text("$value$unit", color = Color(0xB3FFFFFF), fontSize = 14.sp)
+            Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, modifier = Modifier.weight(1f))
+            Text("$value$unit", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         }
         Slider(
             value = value.toFloat(),
             onValueChange = { onChange(it.roundToInt()) },
             valueRange = range.first.toFloat()..range.last.toFloat(),
-            colors = SliderDefaults.colors(thumbColor = Color.White,
-                activeTrackColor = ACCENT, inactiveTrackColor = Color(0xFF3A3A3C)),
+            colors = SliderDefaults.colors(
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest),
         )
     }
 }
@@ -699,9 +722,8 @@ private fun TuningSlider(
 private fun TuningSwitch(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically) {
-        Text(label, color = Color.White, fontSize = 16.sp, modifier = Modifier.weight(1f))
-        Switch(checked, onChange,
-            colors = switchColors())
+        Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, modifier = Modifier.weight(1f))
+        ThumbSwitch(checked, onChange)
     }
 }
 
@@ -718,12 +740,12 @@ private fun ShortcutsSheet(shortcuts: Shortcuts) {
     val (slots, affordances, selections) = state
     Column(Modifier.fillMaxWidth().padding(bottom = 32.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(R.string.gallery_shortcuts), color = Color.White, fontSize = 20.sp,
+        Text(stringResource(R.string.gallery_shortcuts), color = MaterialTheme.colorScheme.onSurface, fontSize = 20.sp,
             fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 20.dp))
         slots.forEachIndexed { index, slot ->
             Text(stringResource(if (index == 0) R.string.gallery_shortcut_left
                 else R.string.gallery_shortcut_right),
-                color = Color(0xB3FFFFFF), fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp,
                 modifier = Modifier.padding(horizontal = 20.dp))
             val chosen = selections.firstOrNull { it.slotId == slot.id }?.affordanceId
             val options = listOf(null to stringResource(R.string.gallery_shortcut_none)) +
@@ -758,13 +780,13 @@ private fun HomeDialog(
     }
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            Modifier.clip(RoundedCornerShape(28.dp)).background(Color(0xFF1C1C1E))
+            Modifier.clip(RoundedCornerShape(28.dp)).background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(stringResource(R.string.gallery_home_title), color = Color.White,
+            Text(stringResource(R.string.gallery_home_title), color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(stringResource(R.string.gallery_home_summary), color = Color(0xB3FFFFFF),
+            Text(stringResource(R.string.gallery_home_summary), color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp, textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 6.dp, bottom = 16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -774,7 +796,7 @@ private fun HomeDialog(
                         val shape = RoundedCornerShape(12.dp)
                         val base = Color(dominant ?: 0xFF444444.toInt())
                         Box(Modifier.fillMaxWidth().aspectRatio(0.46f).clip(shape)
-                            .border(1.dp, Color(0x33FFFFFF), shape)) {
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape)) {
                             when (style) {
                                 HomeStyle.PAIR -> WallpaperImage(wallpaper, Modifier.fillMaxSize())
                                 HomeStyle.BLUR -> WallpaperImage(wallpaper,
@@ -793,7 +815,7 @@ private fun HomeDialog(
                             HomeStyle.BLUR -> R.string.gallery_home_blur
                             HomeStyle.COLOUR -> R.string.gallery_colour
                             HomeStyle.GRADIENT -> R.string.gallery_home_gradient
-                        }), color = Color.White, fontSize = 12.sp,
+                        }), color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp,
                             modifier = Modifier.padding(top = 6.dp))
                     }
                 }

@@ -27,8 +27,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +45,7 @@ import org.lunaris.lockstyles.R
 import org.lunaris.lockstyles.Shortcuts
 import org.lunaris.lockstyles.StockClock
 import org.lunaris.lockstyles.settings.ui.LockSettingsActivity
+import org.lunaris.lockstyles.settings.ui.LockStylesTheme
 import java.io.File
 import java.io.FileOutputStream
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +78,8 @@ class LockScreenGalleryActivity : ComponentActivity() {
         val startInGallery = intent.getBooleanExtra(EXTRA_GALLERY, false)
         lifecycleScope.launch(Dispatchers.IO) { adoptCurrentWallpaper(store) }
         setContent {
-            MaterialTheme(colorScheme = darkColorScheme()) {
+            // Over wallpapers, so always the dark side of the expressive theme.
+            LockStylesTheme(dark = true) {
                 var screen by remember {
                     mutableStateOf<Screen>(
                         if (startInGallery) Screen.Gallery else Screen.Switcher(zoomIn = true))
