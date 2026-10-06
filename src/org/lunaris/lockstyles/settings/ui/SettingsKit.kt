@@ -7,6 +7,13 @@
 package org.lunaris.lockstyles.settings.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +52,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -81,6 +87,15 @@ import org.lunaris.lockstyles.settings.ui.components.squishable
  * top bar, each group an extra-large card built from its components.
  */
 
+/** Fades a row to 40% while it's disabled, with the theme's effects spring. */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun Modifier.dimmed(enabled: Boolean): Modifier {
+    val alpha by animateFloatAsState(if (enabled) 1f else 0.4f,
+        MaterialTheme.motionScheme.defaultEffectsSpec(), label = "dim")
+    return graphicsLayer { this.alpha = alpha }
+}
+
 /** The theme's primary colour, for the few places that colour by hand. */
 val Accent: Color
     @Composable get() = MaterialTheme.colorScheme.primary
@@ -95,23 +110,29 @@ fun Modifier.pickTile(on: Boolean): Modifier {
         .border(if (on) 2.dp else 0.dp, if (on) colors.primary else Color.Transparent, shape)
 }
 
-/** A settings page: LunarisDolby's top bar, then [content]'s cards. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** A settings page: a large title that folds into the bar as it scrolls, then the cards. */
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsPage(title: String, onBack: () -> Unit, content: LazyListScope.() -> Unit) {
+    val scroll = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
+        modifier = Modifier.nestedScroll(scroll.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = {
-                    Text(title, style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                    Text(title, fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer),
+                scrollBehavior = scroll,
             )
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -141,6 +162,7 @@ fun LazyListScope.group(
     item { Group(title, rows, icon) }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Group(
     title: String?,
@@ -148,8 +170,10 @@ fun Group(
     icon: ImageVector = Icons.Rounded.Tune,
 ) {
     if (rows.isEmpty()) return
+    val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<IntSize>()
     val body: @Composable () -> Unit = {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.animateContentSize(spatial),
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             rows.forEachIndexed { i, row ->
                 row(RowShape(first = i == 0, last = i == rows.lastIndex))
             }
@@ -191,7 +215,7 @@ private fun Tile(
                 scope.launch { haptic.performHaptic(HapticIntensity.TICK) }
                 onClick()
             } else Modifier)
-            .alpha(if (enabled) 1f else 0.4f),
+            .dimmed(enabled),
     ) {
         Box(Modifier.heightIn(min = 56.dp).padding(16.dp),
             contentAlignment = Alignment.CenterStart) { content() }
@@ -248,7 +272,7 @@ fun switchRow(
         subtitle = summary.orEmpty(),
         checked = on,
         onCheckedChange = { if (enabled) { on = it; onChange(it) } },
-        modifier = Modifier.alpha(if (enabled) 1f else 0.4f),
+        modifier = Modifier.dimmed(enabled),
     )
 }
 
@@ -270,7 +294,7 @@ fun sliderRow(
         value = shown
     }
     val steps = ((range.last - range.first) / step - 1).coerceAtLeast(0)
-    Column(Modifier.alpha(if (enabled) 1f else 0.4f).padding(horizontal = 4.dp)) {
+    Column(Modifier.dimmed(enabled).padding(horizontal = 4.dp)) {
         ModernSettingSlider(
             title = title,
             value = shown,
@@ -321,7 +345,7 @@ private fun <T> ChoiceRow(
     val haptic = rememberHapticFeedback()
     val scope = rememberCoroutineScope()
     Row(
-        Modifier.fillMaxWidth().alpha(if (enabled) 1f else 0.4f)
+        Modifier.fillMaxWidth().dimmed(enabled)
             .padding(horizontal = 4.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

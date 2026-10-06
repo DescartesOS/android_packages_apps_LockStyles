@@ -15,6 +15,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -68,6 +72,7 @@ enum class Page { MAIN, CLOCK, WIDGETS, DEPTH, MEDIA_ART, PULSE, NOW_PLAYING, UD
 /** Asks before restarting SystemUI, as Singularity's showSystemUiRestartDialog. */
 val LocalAskRestart = staticCompositionLocalOf<() -> Unit> { {} }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     var stack by remember { mutableStateOf(listOf(start)) }
@@ -80,15 +85,18 @@ fun LockSettings(start: Page = Page.MAIN, onExit: () -> Unit) {
     val back: () -> Unit = { if (stack.size > 1) stack = stack.dropLast(1) else onExit() }
     BackHandler(onBack = back)
 
+    val spatial = MaterialTheme.motionScheme.defaultSpatialSpec<IntOffset>()
+    val effects = MaterialTheme.motionScheme.defaultEffectsSpec<Float>()
     CompositionLocalProvider(LocalAskRestart provides { askRestart = true }) {
         AnimatedContent(
             targetState = stack,
             transitionSpec = {
+                // Shared axis: the new page slides in a little, the old one eases back.
                 val forward = targetState.size >= initialState.size
-                (slideInHorizontally(tween(320)) { if (forward) it / 4 else -it / 4 } +
-                    fadeIn(tween(240))) togetherWith
-                    (slideOutHorizontally(tween(320)) { if (forward) -it / 4 else it / 4 } +
-                        fadeOut(tween(200)))
+                (slideInHorizontally(spatial) { if (forward) it / 5 else -it / 5 } +
+                    fadeIn(effects)) togetherWith
+                    (slideOutHorizontally(spatial) { if (forward) -it / 10 else it / 10 } +
+                        fadeOut(effects) + scaleOut(effects, targetScale = 0.96f))
             },
             label = "page",
         ) { pages ->
