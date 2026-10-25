@@ -163,10 +163,237 @@ object CustomClocks {
                 systemUi,
             ).also { catalogue = it }
         } catch (e: Exception) {
-            Log.w(TAG, "Settings has no custom clock styles", e)
+            Log.w(TAG, "Settings has no custom clock styles, falling back to SystemUI", e)
+            loadFromSystemUI(context)
+        }
+    }
+
+    private fun loadFromSystemUI(context: Context): Catalogue? {
+        val systemUi = runCatching {
+            context.createPackageContext(SYSTEMUI,
+                Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY)
+        }.getOrNull() ?: return null
+
+        val res = systemUi.resources
+        val names = mutableListOf<String>()
+        val layouts = mutableListOf<Int>()
+
+        // Index 0: Default
+        names.add(CLOCK_NAMES.firstOrNull() ?: "Default Clock")
+        layouts.add(0)
+
+        for (i in 1 until CLOCK_LAYOUT_NAMES.size) {
+            val layoutName = CLOCK_LAYOUT_NAMES[i]
+            val layoutId = res.getIdentifier(layoutName, "layout", SYSTEMUI)
+            if (layoutId != 0) {
+                layouts.add(layoutId)
+                names.add(if (i < CLOCK_NAMES.size) CLOCK_NAMES[i] else layoutName)
+            }
+        }
+
+        return if (layouts.size > 1) {
+            Catalogue(
+                names,
+                layouts.toIntArray(),
+                ContextThemeWrapper(systemUi, android.R.style.Theme_DeviceDefault_NoActionBar),
+                systemUi,
+            ).also { catalogue = it }
+        } else {
             null
         }
     }
+
+    private val CLOCK_LAYOUT_NAMES = arrayOf(
+        "keyguard_clock_default",
+        "keyguard_clock_oos",
+        "keyguard_clock_oos2",
+        "keyguard_clock_center",
+        "keyguard_clock_simple",
+        "keyguard_clock_miui",
+        "keyguard_clock_ide",
+        "keyguard_clock_moto",
+        "keyguard_clock_stylish",
+        "keyguard_clock_stylish2",
+        "keyguard_clock_stylish3",
+        "keyguard_clock_stylish4",
+        "keyguard_clock_stylish5",
+        "keyguard_clock_stylish6",
+        "keyguard_clock_stylish7",
+        "keyguard_clock_stylish8",
+        "keyguard_clock_stylish9",
+        "keyguard_clock_stylish10",
+        "keyguard_clock_word",
+        "keyguard_clock_life",
+        "keyguard_clock_a9",
+        "keyguard_clock_nos1",
+        "keyguard_clock_nos2",
+        "keyguard_clock_num",
+        "keyguard_clock_accent",
+        "keyguard_clock_analog",
+        "keyguard_clock_block",
+        "keyguard_clock_bubble",
+        "keyguard_clock_label",
+        "keyguard_clock_ios",
+        "keyguard_clock_taden",
+        "keyguard_clock_mont",
+        "keyguard_clock_encode",
+        "keyguard_clock_nos3",
+        "keyguard_anci_clock_outline",
+        "keyguard_anci_clock_ovalium",
+        "keyguard_anci_clock_rectangle",
+        "keyguard_anci_clock_wallet",
+        "keyguard_anci_clockdate_clavicula",
+        "keyguard_anci_clockdate_kln",
+        "keyguard_anci_clockdate_miring",
+        "keyguard_anci_clockdate_scapula",
+        "keyguard_anci_clockdate_sternum",
+        "keyguard_sparkCircle",
+        "keyguard_sparkList",
+        "keyguard_clock_miui2",
+        "keyguard_clock_ios2",
+        "keyguard_clock_ios3",
+        "keyguard_clock_ios4",
+        "keyguard_clock_ios5",
+        "keyguard_clock_ios6",
+        "keyguard_clock_ios7",
+        "keyguard_clock_ios8",
+        "keyguard_clock_ios9",
+        "keyguard_clock_ios10",
+        "keyguard_clock_ios11",
+        "keyguard_clock_ios12",
+        "keyguard_clock_ios13",
+        "keyguard_clock_ios14",
+        "keyguard_clock_ios15",
+        "keyguard_clock_ios16",
+        "keyguard_clock_ios17",
+        "keyguard_clock_ios18",
+        "keyguard_clock_ios19",
+        "keyguard_clock_big1",
+        "keyguard_clock_big2",
+        "keyguard_clock_big3",
+        "keyguard_clock_big4",
+        "keyguard_clock_sweet",
+        "keyguard_clock_pixel",
+        "keyguard_clock_samurai",
+        "keyguard_clock_gateway",
+        "keyguard_clock_tall",
+        "keyguard_clock_gobold",
+        "keyguard_clock_gobold2",
+        "keyguard_clock_delirium",
+        "keyguard_clock_deliriumdual",
+        "keyguard_clock_skewrom",
+        "keyguard_clock_skewrom2",
+        "keyguard_clock_taller",
+        "keyguard_clock_taller2",
+        "keyguard_clock_taller3",
+        "keyguard_clock_modak",
+        "keyguard_clock_galada",
+        "keyguard_clock_cos1",
+        "keyguard_clock_cos2",
+        "keyguard_clock_neu",
+        "keyguard_clock_neu2",
+        "keyguard_clock_neu3",
+        "keyguard_clock_badeen",
+        "keyguard_clock_space_age",
+        "keyguard_clock_polyline",
+        "keyguard_clock_oppo",
+    )
+
+    private val CLOCK_NAMES = listOf(
+        "Default Clock",
+        "OnePlus Clock",
+        "OnePlus Clock 2",
+        "Center Clock",
+        "Simple Clock",
+        "MIUI Clock",
+        "IDE Clock",
+        "Moto Clock",
+        "Stylish Clock",
+        "Stylish Clock 2",
+        "Stylish Clock 3",
+        "Stylish Clock 4",
+        "Stylish Clock 5",
+        "Stylish Clock 6",
+        "Stylish Clock 7",
+        "Stylish Clock 8",
+        "Stylish Clock 9",
+        "Stylish Clock 10",
+        "Text Clock",
+        "LifeStyle Clock",
+        "Android 9 Vibe",
+        "NothingOS 1 Clock",
+        "NothingOS 2 Clock",
+        "Stacked Clock",
+        "X Factor",
+        "Simple Analog",
+        "Block",
+        "Bubble",
+        "Label Clock",
+        "iOS Clock",
+        "Taden Clock",
+        "Mont Clock",
+        "Encode Clock",
+        "NOS Clock 3",
+        "Anci Outline",
+        "Anci Ovalium",
+        "Anci Rectangle",
+        "Anci Wallet",
+        "Anci Clavicula",
+        "Anci KLN",
+        "Anci Miring",
+        "Anci Scapula",
+        "Anci Sternum",
+        "Spark Circle",
+        "Spark List",
+        "HyperOS Clock",
+        "iOS 2",
+        "iOS 3",
+        "iOS 4",
+        "iOS 5",
+        "iOS 6",
+        "iOS 7",
+        "iOS 8",
+        "iOS 9",
+        "iOS 10",
+        "iOS 11",
+        "iOS 12",
+        "iOS 13",
+        "iOS 14",
+        "iOS 15",
+        "iOS 16",
+        "iOS 17",
+        "iOS 18",
+        "iOS 19",
+        "Big 1",
+        "Big 2",
+        "Big 3",
+        "Big 4",
+        "Sweet",
+        "Pixel",
+        "Samurai",
+        "Gateway",
+        "Tall clock",
+        "GoBold monet",
+        "GoBold",
+        "Delirium",
+        "Delirium Dual",
+        "Skewrom",
+        "Skewrom 2",
+        "Taller",
+        "Taller 2",
+        "Taller 3",
+        "Modak",
+        "Galada",
+        "COS 1",
+        "COS 2",
+        "Neu",
+        "Neu2",
+        "Neu3",
+        "Badeen",
+        "Space age",
+        "Poly line",
+        "Big clock",
+    )
 
     /** Style names, the first being the default clock. Empty when Settings lacks them. */
     fun names(context: Context): List<String> = load(context)?.names ?: emptyList()

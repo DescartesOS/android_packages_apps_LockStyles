@@ -23,9 +23,15 @@ import android.util.Log
  */
 object Lunaris {
 
-    private const val TAG = "Lunaris"
-    private const val UTILS = "com.android.internal.util.lunaris.Utils"
-    private const val THEME_UTILS = "com.android.internal.util.lunaris.ThemeUtils"
+    private const val TAG = "RomUtils"
+    private val UTILS_CLASSES = listOf(
+        "com.android.internal.util.crdroid.Utils",
+        "com.android.internal.util.lunaris.Utils",
+    )
+    private val THEME_UTILS_CLASSES = listOf(
+        "com.android.internal.util.crdroid.ThemeUtils",
+        "com.android.internal.util.lunaris.ThemeUtils",
+    )
     private const val OMNIJAWS = "org.omnirom.omnijaws"
     private val OMNIJAWS_SETTINGS = Uri.parse("content://org.omnirom.omnijaws.provider/settings")
     private const val PROP_CUSTOM_UDFPS = "persist.sys.udfps.custom"
@@ -38,9 +44,11 @@ object Lunaris {
     fun restartSystemUI(context: Context) {
         if (context.checkSelfPermission(android.Manifest.permission.STATUS_BAR_SERVICE) ==
                 PackageManager.PERMISSION_GRANTED) {
-            runCatching { Class.forName(UTILS).getMethod("restartSystemUI").invoke(null) }
-                .onSuccess { return }
-                .onFailure { Log.w(TAG, "The status bar service did not restart SystemUI", it) }
+            for (className in UTILS_CLASSES) {
+                runCatching {
+                    Class.forName(className).getMethod("restartSystemUI").invoke(null)
+                }.onSuccess { return }
+            }
         }
         runCatching {
             context.getSystemService(android.app.ActivityManager::class.java)!!.javaClass
@@ -52,10 +60,20 @@ object Lunaris {
 
     private const val SYSTEMUI = "com.android.systemui"
 
-    private fun themeUtils(context: Context): Any? =
-        runCatching {
-            Class.forName(THEME_UTILS).getConstructor(Context::class.java).newInstance(context)
-        }.onFailure { Log.w(TAG, "ThemeUtils is missing", it) }.getOrNull()
+    private fun themeUtils(context: Context): Any? {
+        for (className in THEME_UTILS_CLASSES) {
+            runCatching {
+                val clazz = Class.forName(className)
+                try {
+                    clazz.getMethod("getInstance", Context::class.java).invoke(null, context)
+                } catch (_: NoSuchMethodException) {
+                    clazz.getConstructor(Context::class.java).newInstance(context)
+                }
+            }.getOrNull()?.let { return it }
+        }
+        Log.w(TAG, "ThemeUtils is missing")
+        return null
+    }
 
     /** Enables [packageName] in [category], or the target itself to turn the category off. */
     fun setOverlay(context: Context, category: String, packageName: String, target: String) {

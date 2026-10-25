@@ -33,7 +33,11 @@ object LunarisImages {
                 type == "image/webp" -> ".webp"
                 else -> ".png"
             }
-            val dir = File("/sdcard/Lunaris-OS/$feature").apply { mkdirs() }
+            val dir = File("/sdcard/DescartesOS/$feature").apply {
+                if (!mkdirs() && !exists()) {
+                    File("/sdcard/Lunaris-OS/$feature").mkdirs()
+                }
+            }
             dir.listFiles { _, name -> name.startsWith(prefix) }?.forEach { it.delete() }
             val stamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
             val file = File(dir, "${prefix}_$stamp$extension")
