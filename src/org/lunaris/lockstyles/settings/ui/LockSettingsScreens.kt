@@ -152,6 +152,15 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
     val vibrator = remember { Lunaris.hasVibrator(context) }
 
     SettingsPage(s(R.string.lock_screen_title), back) {
+        group(s(R.string.crdroid_lock_customization_category), Icons.Rounded.Dashboard, listOf(
+            navRow(s(R.string.crdroid_lock_customization_title),
+                s(R.string.crdroid_lock_customization_summary),
+                Icons.Rounded.Dashboard) {
+                val intent = Intent("android.intent.action.MAIN")
+                    .setClassName("com.android.settings", "com.android.settings.Settings\$crDroidSettingsLayoutActivity")
+                runCatching { context.startActivity(intent) }
+            }
+        ))
         group(s(R.string.qs_clock_title), Icons.Rounded.Schedule, listOf(
             navRow(s(R.string.ls_clock_title), s(R.string.ls_clock_summary),
                 Icons.Rounded.Schedule) { open(Page.CLOCK) },
