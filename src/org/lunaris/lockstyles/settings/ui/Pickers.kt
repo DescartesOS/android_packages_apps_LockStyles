@@ -213,16 +213,17 @@ object DepthExtractor {
     }.getOrDefault(false)
 }
 
-/** The drawables Lunaris ships for the under-display fingerprint sensor. */
-enum class UdfpsPacks(val pkg: String, val names: String, val previews: String?,
+/** The drawables shipped for the under-display fingerprint sensor. */
+enum class UdfpsPacks(val pkgs: List<String>, val names: String, val previews: String?,
         val titles: String?) {
-    ICONS("com.lunaris.udfps.icons", "udfps_icons", null, null),
-    ANIMATIONS("com.lunaris.udfps.animations", "udfps_animation_styles",
+    ICONS(listOf("com.crdroid.udfps.icons", "com.lunaris.udfps.icons"), "udfps_icons", null, null),
+    ANIMATIONS(listOf("com.crdroid.udfps.animations", "com.lunaris.udfps.animations"), "udfps_animation_styles",
         "udfps_animation_previews", "udfps_animation_titles");
 
     class Item(val index: Int, val preview: Drawable?, val title: String?)
 
     fun load(context: Context): List<Item> = runCatching {
+        val pkg = pkgs.firstOrNull { Lunaris.isInstalled(context, it) } ?: pkgs.first()
         val res = context.packageManager.getResourcesForApplication(pkg)
         fun array(name: String?) = name?.let {
             res.getIdentifier(it, "array", pkg).takeIf { id -> id != 0 }?.let(res::getStringArray)

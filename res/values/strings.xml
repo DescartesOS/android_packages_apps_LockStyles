@@ -18,7 +18,4 @@
     <string name="credits_ax_blur">The glass blur material, from AxionOS\' ax_blur</string>
     <string name="clock_font_default">Default</string>
     <string name="depthwall_extract_unavailable">Settings\' subject extractor isn\'t available</string>
-    <string name="crdroid_lock_customization_category">crDroid customization</string>
-    <string name="crdroid_lock_customization_title">crDroid lock settings</string>
-    <string name="crdroid_lock_customization_summary">Open crDroid settings and customization dashboard</string>
 </resources>

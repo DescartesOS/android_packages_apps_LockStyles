@@ -113,7 +113,16 @@ object Lunaris {
     fun hasVibrator(context: Context): Boolean =
         context.getSystemService(Vibrator::class.java)?.hasVibrator() == true
 
-    /** Whether the device ships Lunaris' under-display fingerprint customisation. */
+    /** Whether the device ships under-display fingerprint customisation. */
+    fun hasCustomUdfps(context: Context): Boolean =
+        hasFingerprint(context) && (
+            SystemProperties.getBoolean(PROP_CUSTOM_UDFPS, false) ||
+            isInstalled(context, "com.crdroid.udfps.icons") ||
+            isInstalled(context, "com.crdroid.udfps.animations") ||
+            isInstalled(context, "com.lunaris.udfps.icons") ||
+            isInstalled(context, "com.lunaris.udfps.animations")
+        )
+
     fun hasCustomUdfps(): Boolean = SystemProperties.getBoolean(PROP_CUSTOM_UDFPS, false)
 
     fun isInstalled(context: Context, pkg: String): Boolean =

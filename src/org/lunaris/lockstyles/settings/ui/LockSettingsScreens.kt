@@ -152,15 +152,6 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
     val vibrator = remember { Lunaris.hasVibrator(context) }
 
     SettingsPage(s(R.string.lock_screen_title), back) {
-        group(s(R.string.crdroid_lock_customization_category), Icons.Rounded.Dashboard, listOf(
-            navRow(s(R.string.crdroid_lock_customization_title),
-                s(R.string.crdroid_lock_customization_summary),
-                Icons.Rounded.Dashboard) {
-                val intent = Intent("android.intent.action.MAIN")
-                    .setClassName("com.android.settings", "com.android.settings.Settings\$crDroidSettingsLayoutActivity")
-                runCatching { context.startActivity(intent) }
-            }
-        ))
         group(s(R.string.qs_clock_title), Icons.Rounded.Schedule, listOf(
             navRow(s(R.string.ls_clock_title), s(R.string.ls_clock_summary),
                 Icons.Rounded.Schedule) { open(Page.CLOCK) },
@@ -229,7 +220,7 @@ private fun MainPage(open: (Page) -> Unit, back: () -> Unit) {
                     s(R.string.enable_fingerprint_ripple_effect_summary), Keys.FP_RIPPLE))
             }
         })
-        if (Lunaris.hasCustomUdfps()) {
+        if (Lunaris.hasCustomUdfps(context)) {
             group(s(R.string.udfps_custom_title), Icons.Rounded.Fingerprint, listOf(
                 navRow(s(R.string.udfps_cust_title), s(R.string.udfps_cust_summary),
                     Icons.Rounded.Fingerprint) { open(Page.UDFPS) },
