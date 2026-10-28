@@ -15,6 +15,10 @@ data class GalleryWallpaper(
     val shuffle: Shuffle = Shuffle.ON_LOCK,
     /** Whether the photo's subject is lifted above the clock (SystemUI depth wallpaper). */
     val depth: Boolean = false,
+    val subjectPath: String? = null,
+    val spatial: Boolean = false,
+    val spatialSensitivity: Int = 100,
+    val depthOpacity: Int = 100,
     /** A [GalleryEffect] ordinal, for photos. */
     val effect: Int = 0,
 ) {
@@ -49,6 +53,10 @@ data class GalleryWallpaper(
             .put("emojis", emojis)
             .put("shuffle", shuffle.name)
             .put("depth", depth)
+            .put("subjectPath", subjectPath)
+            .put("spatial", spatial)
+            .put("spatialSensitivity", spatialSensitivity)
+            .put("depthOpacity", depthOpacity)
             .put("effect", effect)
 
     companion object {
@@ -88,6 +96,10 @@ data class GalleryWallpaper(
                     runCatching { Shuffle.valueOf(json.optString("shuffle")) }
                         .getOrDefault(Shuffle.ON_LOCK),
                 depth = json.optBoolean("depth"),
+                subjectPath = json.optString("subjectPath").takeIf { it.isNotBlank() && it != "null" },
+                spatial = json.optBoolean("spatial"),
+                spatialSensitivity = json.optInt("spatialSensitivity", 100).coerceIn(0, 100),
+                depthOpacity = json.optInt("depthOpacity", 100).coerceIn(1, 100),
                 effect = json.optInt("effect"),
             )
         }

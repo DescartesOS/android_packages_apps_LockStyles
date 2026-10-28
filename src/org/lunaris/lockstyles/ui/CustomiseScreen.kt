@@ -1,5 +1,10 @@
 package org.lunaris.lockstyles.ui
 
+import org.lunaris.lockstyles.DepthSubjectStore
+import android.widget.Toast
+import androidx.compose.material3.TextButton
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -333,6 +338,7 @@ private fun KindControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpape
                         ThumbSwitch(wallpaper.depth) { onChange(wallpaper.copy(depth = it)) }
                     }
                 }
+                if (wallpaper.depth) DepthControls(wallpaper, onChange)
                 Text(stringResource(R.string.gallery_effect), color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp, fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(horizontal = 20.dp))
@@ -823,4 +829,55 @@ private fun HomeDialog(
             Spacer(Modifier.height(8.dp))
         }
     }
+}
+
+
+@Composable
+private fun DepthControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpaper) -> Unit) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val current by rememberUpdatedState(wallpaper)
+    var importing by remember { mutableStateOf(false) }
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) scope.launch {
+            val photo = current.photos.firstOrNull()
+            importing = true
+            val subject = withContext(Dispatchers.IO) { DepthSubjectStore.importSubject(context, uri) }
+            importing = false
+            if (subject != null && current.photos.firstOrNull() == photo) {
+                onChange(current.copy(subjectPath = subject))
+            } else if (subject == null) {
+                Toast.makeText(context, R.string.gallery_depth_subject_error, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(stringResource(R.string.gallery_depth_subject_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        TextButton(enabled = !importing, onClick = { picker.launch(arrayOf("image/png", "image/webp")) }) {
+            Text(stringResource(if (wallpaper.subjectPath == null) R.string.gallery_depth_choose_subject
+                else R.string.gallery_depth_change_subject))
+        }
+        if (wallpaper.subjectPath != null) {
+            TextButton(onClick = { onChange(wallpaper.copy(subjectPath = null)) }) {
+                Text(stringResource(R.string.depthwall_clear_subject_title))
+            }
+        }
+        TuningSwitch(stringResource(R.string.gallery_spatial), wallpaper.spatial) {
+            onChange(wallpaper.copy(spatial = it))
+        }
+        Text(stringResource(R.string.gallery_spatial_summary),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+    if (wallpaper.spatial) {
+        TuningSlider(stringResource(R.string.gallery_spatial_strength),
+            wallpaper.spatialSensitivity, 0..100, "%") {
+            onChange(wallpaper.copy(spatialSensitivity = it))
+        }
+    }
+    TuningSlider(stringResource(R.string.depthwall_wallpaper_opacity_title),
+        wallpaper.depthOpacity, 1..100, "%") { onChange(wallpaper.copy(depthOpacity = it)) }
 }

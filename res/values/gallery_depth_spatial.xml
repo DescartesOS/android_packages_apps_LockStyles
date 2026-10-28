@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gallery_spatial">Spatial wallpaper</string>
+    <string name="gallery_spatial_summary">Move the wallpaper and subject as you tilt your phone</string>
+    <string name="gallery_spatial_strength">Motion strength</string>
+    <string name="gallery_depth_choose_subject">Choose subject cutout</string>
+    <string name="gallery_depth_change_subject">Change subject cutout</string>
+    <string name="gallery_depth_subject_hint">Choose a transparent PNG or WebP aligned with this photo.</string>
+    <string name="gallery_depth_subject_error">Choose a PNG or WebP with a transparent background.</string>
+</resources>

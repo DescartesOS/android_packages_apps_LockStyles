@@ -1,5 +1,6 @@
 package org.lunaris.lockstyles
 
+import android.net.Uri
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -320,7 +321,9 @@ class GalleryEffectRenderer(private val context: Context) {
     /** The cut-out's alpha as white on black, in the red channel the shaders read. */
     private fun subjectMask(path: String): Bitmap? {
         val cutout = try {
-            BitmapFactory.decodeFile(path)
+            if (path.startsWith("content://")) {
+                context.contentResolver.openInputStream(Uri.parse(path))?.use { BitmapFactory.decodeStream(it) }
+            } else BitmapFactory.decodeFile(path)
         } catch (e: RuntimeException) {
             Log.w(TAG, "Could not read the depth subject", e)
             null

@@ -266,12 +266,7 @@ private fun ClockPage(open: (Page) -> Unit, back: () -> Unit) {
     // The clock's style, colours, size and animations belong to each lock screen, so they're
     // set in its Customise screen; this page keeps what's the same for all of them.
     SettingsPage(s(R.string.ls_clock_title), back) {
-        group(null, listOf(
-            navRow(s(R.string.clock_style_in_gallery), s(R.string.clock_style_in_gallery_summary),
-                Icons.Rounded.Schedule) {
-                context.startActivity(Intent(context, LockScreenGalleryActivity::class.java))
-            },
-        ))
+        // Lock gallery disabled - clock settings will be added manually
         item { ClockFontPicker() }
         group(null, listOf(
             navRow(s(R.string.lockscreen_widgets_title),
@@ -352,6 +347,10 @@ private fun DepthPage(back: () -> Unit) {
                 enabled = depth && subject != null) { confirmClear = true },
         ))
         group(null, listOf(
+            switchRow(s(R.string.gallery_spatial), s(R.string.gallery_spatial_summary),
+                Keys.DEPTH_SPATIAL, enabled = depth),
+            sliderRow(s(R.string.gallery_spatial_strength), null, Keys.DEPTH_SPATIAL_SENSITIVITY,
+                0..100, unit = "%"),
             sliderRow(s(R.string.depthwall_wallpaper_opacity_title), null, Keys.DEPTH_OPACITY,
                 1..100, unit = "%"),
             sliderRow(s(R.string.depth_wallpaper_bottom_fade_title),

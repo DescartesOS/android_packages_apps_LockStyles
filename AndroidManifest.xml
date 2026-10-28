@@ -33,6 +33,7 @@
 
         <activity
             android:name=".ui.LockScreenGalleryActivity"
+            android:enabled="true"
             android:label="@string/gallery_title"
             android:theme="@style/Theme.LockStyles"
             android:excludeFromRecents="true"
@@ -85,5 +86,10 @@
                 android:name="android.service.wallpaper"
                 android:resource="@xml/gallery_wallpaper" />
         </service>
+        <provider
+            android:name=".DepthSubjectProvider"
+            android:authorities="org.lunaris.lockstyles.depth"
+            android:exported="true"
+            android:readPermission="android.permission.READ_WALLPAPER_INTERNAL" />
     </application>
 </manifest>
