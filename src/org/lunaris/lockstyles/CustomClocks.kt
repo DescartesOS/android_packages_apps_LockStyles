@@ -1,6 +1,8 @@
 package org.lunaris.lockstyles
 
 import android.content.Context
+import android.net.Uri
+import android.os.UserHandle
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -135,6 +137,7 @@ object CustomClocks {
 
     private fun load(context: Context): Catalogue? {
         catalogue?.let { return it }
+        loadFromSystemUI(context)?.let { return it }
         return try {
             val settings = context.createPackageContext(SETTINGS,
                 Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY)
@@ -174,6 +177,18 @@ object CustomClocks {
                 Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY)
         }.getOrNull() ?: return null
 
+        val exported = runCatching {
+            context.contentResolver.call(Uri.parse("content://com.android.systemui.clockcatalogue"),
+                "clock_layouts", null, null)?.getIntArray("layouts")
+        }.getOrNull()
+        if (exported != null && exported.size > 1) {
+            return Catalogue(
+                exported.indices.map { CLOCK_NAMES.getOrNull(it) ?: "Clock $it" },
+                exported,
+                ContextThemeWrapper(systemUi, android.R.style.Theme_DeviceDefault_NoActionBar),
+                systemUi,
+            ).also { catalogue = it }
+        }
         val res = systemUi.resources
         val names = mutableListOf<String>()
         val layouts = mutableListOf<Int>()
@@ -185,13 +200,11 @@ object CustomClocks {
         for (i in 1 until CLOCK_LAYOUT_NAMES.size) {
             val layoutName = CLOCK_LAYOUT_NAMES[i]
             val layoutId = res.getIdentifier(layoutName, "layout", SYSTEMUI)
-            if (layoutId != 0) {
-                layouts.add(layoutId)
-                names.add(if (i < CLOCK_NAMES.size) CLOCK_NAMES[i] else layoutName)
-            }
+            layouts.add(layoutId)
+            names.add(if (i < CLOCK_NAMES.size) CLOCK_NAMES[i] else layoutName)
         }
 
-        return if (layouts.size > 1) {
+        return if (layouts.drop(1).any { it != 0 }) {
             Catalogue(
                 names,
                 layouts.toIntArray(),
@@ -263,11 +276,6 @@ object CustomClocks {
         "keyguard_clock_ios12",
         "keyguard_clock_ios13",
         "keyguard_clock_ios14",
-        "keyguard_clock_ios15",
-        "keyguard_clock_ios16",
-        "keyguard_clock_ios17",
-        "keyguard_clock_ios18",
-        "keyguard_clock_ios19",
         "keyguard_clock_big1",
         "keyguard_clock_big2",
         "keyguard_clock_big3",
@@ -277,26 +285,6 @@ object CustomClocks {
         "keyguard_clock_samurai",
         "keyguard_clock_gateway",
         "keyguard_clock_tall",
-        "keyguard_clock_gobold",
-        "keyguard_clock_gobold2",
-        "keyguard_clock_delirium",
-        "keyguard_clock_deliriumdual",
-        "keyguard_clock_skewrom",
-        "keyguard_clock_skewrom2",
-        "keyguard_clock_taller",
-        "keyguard_clock_taller2",
-        "keyguard_clock_taller3",
-        "keyguard_clock_modak",
-        "keyguard_clock_galada",
-        "keyguard_clock_cos1",
-        "keyguard_clock_cos2",
-        "keyguard_clock_neu",
-        "keyguard_clock_neu2",
-        "keyguard_clock_neu3",
-        "keyguard_clock_badeen",
-        "keyguard_clock_space_age",
-        "keyguard_clock_polyline",
-        "keyguard_clock_oppo",
     )
 
     private val CLOCK_NAMES = listOf(
@@ -359,11 +347,6 @@ object CustomClocks {
         "iOS 12",
         "iOS 13",
         "iOS 14",
-        "iOS 15",
-        "iOS 16",
-        "iOS 17",
-        "iOS 18",
-        "iOS 19",
         "Big 1",
         "Big 2",
         "Big 3",
@@ -373,26 +356,6 @@ object CustomClocks {
         "Samurai",
         "Gateway",
         "Tall clock",
-        "GoBold monet",
-        "GoBold",
-        "Delirium",
-        "Delirium Dual",
-        "Skewrom",
-        "Skewrom 2",
-        "Taller",
-        "Taller 2",
-        "Taller 3",
-        "Modak",
-        "Galada",
-        "COS 1",
-        "COS 2",
-        "Neu",
-        "Neu2",
-        "Neu3",
-        "Badeen",
-        "Space age",
-        "Poly line",
-        "Big clock",
     )
 
     /** Style names, the first being the default clock. Empty when Settings lacks them. */
@@ -528,8 +491,11 @@ object CustomClocks {
      */
     fun apply(context: Context, style: Int, color: Int?, tuning: Tuning? = null) {
         val resolver = context.contentResolver
-        val before = runCatching { Settings.Secure.getInt(resolver, KEY_STYLE, 0) }.getOrDefault(0)
-        Settings.Secure.putInt(resolver, KEY_STYLE, style)
+        val userId = UserHandle.USER_CURRENT
+        val before = runCatching {
+            Settings.Secure.getIntForUser(resolver, KEY_STYLE, 0, userId)
+        }.getOrDefault(0)
+        Settings.Secure.putIntForUser(resolver, KEY_STYLE, style, userId)
         setAospClockHidden(context, style != 0)
         if (style != 0) {
             // Without new tuning, e.g. from the switcher, the current accent or gradient stays.
@@ -545,9 +511,7 @@ object CustomClocks {
             if (color != null) Settings.Secure.putInt(resolver, KEY_CUSTOM_COLOR, color)
             tuning?.save(context)
         }
-        if ((before == 0) != (style == 0)) {
-            // Lunaris applies the stock clock's hideclock overlays through ThemeOverlayController;
-            // the rest of the keyguard only reads the style at startup.
+        if (before != style) {
             org.lunaris.lockstyles.settings.Lunaris.restartSystemUI(context)
         }
     }
