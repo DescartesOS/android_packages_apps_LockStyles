@@ -317,6 +317,10 @@ private fun DepthPage(back: () -> Unit) {
     val context = LocalContext.current
     val depth by Keys.DEPTH.state()
     var subject by Keys.DEPTH_SUBJECT.state()
+    val automatic by Keys.DEPTH_AUTO_SUBJECT.state()
+    androidx.compose.runtime.LaunchedEffect(depth, automatic) {
+        if (depth && automatic) DepthExtractor.extractNow(context)
+    }
     val pickSubject = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()) { uri ->
         uri ?: return@rememberLauncherForActivityResult

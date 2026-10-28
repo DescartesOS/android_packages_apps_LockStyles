@@ -271,9 +271,10 @@ class LockScreenGalleryActivity : ComponentActivity() {
     private fun apply(lockScreen: LockScreen, tuning: CustomClocks.Tuning? = null,
             onApplied: () -> Unit = {}) {
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
+            val applied = withContext(Dispatchers.IO) {
                 GalleryApplier.apply(this@LockScreenGalleryActivity, lockScreen)
             }
+            if (!applied) return@launch
             applyClock(lockScreen.clock, tuning)
             if (fromLockScreen) {
                 finish()

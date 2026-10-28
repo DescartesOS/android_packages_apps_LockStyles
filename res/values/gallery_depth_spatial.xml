@@ -5,6 +5,9 @@
     <string name="gallery_spatial_strength">Motion strength</string>
     <string name="gallery_depth_choose_subject">Choose subject cutout</string>
     <string name="gallery_depth_change_subject">Change subject cutout</string>
-    <string name="gallery_depth_subject_hint">Choose a transparent PNG or WebP aligned with this photo.</string>
+    <string name="gallery_depth_subject_hint">Extract the subject on this device, or choose an aligned transparent PNG or WebP. A subject is extracted automatically when you apply a photo with depth enabled.</string>
     <string name="gallery_depth_subject_error">Choose a PNG or WebP with a transparent background.</string>
+    <string name="gallery_depth_extract">Extract subject</string>
+    <string name="gallery_depth_extracting">Extracting subject…</string>
+    <string name="gallery_depth_extract_error">Could not extract a subject. Try another photo or choose a cutout.</string>
 </resources>

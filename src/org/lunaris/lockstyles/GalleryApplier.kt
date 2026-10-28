@@ -44,6 +44,21 @@ object GalleryApplier {
         var wallpaper = lockScreen.wallpaper
         val live = ComponentName(context, GalleryWallpaperService::class.java)
         try {
+            if (wallpaper.kind == GalleryWallpaper.Kind.PHOTO && wallpaper.depth &&
+                    wallpaper.subjectPath == null) {
+                val photo = GalleryRenderer.toBitmap(context, wallpaper, w, h)
+                val subject = try { AutoDepthExtractor.extract(context, photo) }
+                    finally { photo.recycle() }
+                if (subject == null) {
+                    android.os.Handler(android.os.Looper.getMainLooper()).post {
+                        android.widget.Toast.makeText(context, R.string.gallery_depth_extract_error,
+                            android.widget.Toast.LENGTH_LONG).show()
+                    }
+                    return false
+                }
+                wallpaper = wallpaper.copy(subjectPath = subject)
+                store.save(lockScreen.copy(wallpaper = wallpaper))
+            }
             if (wallpaper.effect != 0) {
                 // An effect runs from the lock screen into the home screen, so it covers both.
                 store.setLiveWallpaper(lock = false, wallpaper = null)

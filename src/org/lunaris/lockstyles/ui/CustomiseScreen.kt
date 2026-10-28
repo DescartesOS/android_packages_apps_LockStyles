@@ -1,5 +1,7 @@
 package org.lunaris.lockstyles.ui
 
+import org.lunaris.lockstyles.GalleryApplier
+import org.lunaris.lockstyles.AutoDepthExtractor
 import org.lunaris.lockstyles.DepthSubjectStore
 import android.widget.Toast
 import androidx.compose.material3.TextButton
@@ -856,6 +858,30 @@ private fun DepthControls(wallpaper: GalleryWallpaper, onChange: (GalleryWallpap
         Text(stringResource(R.string.gallery_depth_subject_hint),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
+        TextButton(enabled = !importing, onClick = {
+            scope.launch {
+                val selected = current
+                importing = true
+                try {
+                    val subject = withContext(Dispatchers.IO) {
+                        val (w, h) = GalleryApplier.screenSize(context)
+                        val photo = GalleryRenderer.toBitmap(context, selected, w, h)
+                        try { AutoDepthExtractor.extract(context, photo) } finally { photo.recycle() }
+                    }
+                    if (current == selected && subject != null) {
+                        onChange(current.copy(subjectPath = subject))
+                    } else if (subject == null) {
+                        Toast.makeText(context, R.string.gallery_depth_extract_error,
+                            Toast.LENGTH_LONG).show()
+                    }
+                } finally {
+                    importing = false
+                }
+            }
+        }) {
+            Text(stringResource(if (importing) R.string.gallery_depth_extracting
+                else R.string.gallery_depth_extract))
+        }
         TextButton(enabled = !importing, onClick = { picker.launch(arrayOf("image/png", "image/webp")) }) {
             Text(stringResource(if (wallpaper.subjectPath == null) R.string.gallery_depth_choose_subject
                 else R.string.gallery_depth_change_subject))

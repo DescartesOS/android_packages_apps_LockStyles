@@ -62,6 +62,7 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".WallpaperSubjectExtractorService" android:exported="false" />
         <service
             android:name=".GalleryWallpaperService"
             android:label="@string/gallery_live_wallpaper"

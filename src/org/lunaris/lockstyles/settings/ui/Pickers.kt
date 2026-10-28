@@ -202,14 +202,10 @@ fun WidgetSlots(enabled: Boolean) {
     ) { Text(stringResource(R.string.apply_change), fontSize = 16.sp) }
 }
 
-/** Singularity's subject extractor lives on in Settings; ask it to cut the subject now. */
 object DepthExtractor {
-    private val SERVICE = ComponentName("com.android.settings",
-        "org.lunaris.settings.utils.WallpaperSubjectExtractorService")
-    private const val ACTION = "org.lunaris.intent.action.EXTRACT_DEPTH_SUBJECT_NOW"
-
     fun extractNow(context: Context): Boolean = runCatching {
-        context.startService(Intent(ACTION).setComponent(SERVICE)) != null
+        context.startService(Intent(context,
+            org.lunaris.lockstyles.WallpaperSubjectExtractorService::class.java)) != null
     }.getOrDefault(false)
 }
 
