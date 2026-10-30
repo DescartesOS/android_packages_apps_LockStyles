@@ -60,12 +60,24 @@ object GalleryApplier {
                 store.save(lockScreen.copy(wallpaper = wallpaper))
             }
             if (wallpaper.effect != 0) {
-                // An effect runs from the lock screen into the home screen, so it covers both.
-                store.setLiveWallpaper(lock = false, wallpaper = null)
                 store.setLiveWallpaper(lock = true, wallpaper = wallpaper)
+                val flags = if (lockScreen.home == HomeStyle.KEEP) {
+                    WallpaperManager.FLAG_LOCK
+                } else {
+                    store.setLiveWallpaper(lock = false, wallpaper = null)
+                    WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK
+                }
                 wm.setWallpaperComponentWithFlags(
-                    ComponentName(context, GalleryEffectService::class.java),
-                    WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK)
+                    ComponentName(context, GalleryEffectService::class.java), flags)
+            } else if (lockScreen.home == HomeStyle.KEEP) {
+                if (wallpaper.kind.live) {
+                    store.setLiveWallpaper(lock = true, wallpaper = wallpaper)
+                    wm.setWallpaperComponentWithFlags(live, WallpaperManager.FLAG_LOCK)
+                } else {
+                    store.setLiveWallpaper(lock = true, wallpaper = null)
+                    wm.setBitmap(GalleryRenderer.toBitmap(context, wallpaper, w, h), null, true,
+                        WallpaperManager.FLAG_LOCK)
+                }
             } else if (lockScreen.home == HomeStyle.PAIR) {
                 store.setLiveWallpaper(lock = false, wallpaper = null)
                 if (wallpaper.kind.live) {
@@ -142,7 +154,8 @@ object GalleryApplier {
                     }
                 }
             }
-            HomeStyle.PAIR -> GalleryRenderer.toBitmap(context, lockScreen.wallpaper, w, h)
+            HomeStyle.PAIR, HomeStyle.KEEP ->
+                GalleryRenderer.toBitmap(context, lockScreen.wallpaper, w, h)
         }
 
     fun blur(source: Bitmap, radius: Float): Bitmap {

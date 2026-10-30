@@ -189,13 +189,7 @@ fun CustomiseScreen(
             Pill(stringResource(android.R.string.cancel), primary = false, onCancel)
             Spacer(Modifier.weight(1f))
             Pill(stringResource(if (isNew) R.string.gallery_add else R.string.gallery_done),
-                primary = true) {
-                // An effect plays from the lock screen into the home screen, so it's a pair.
-                if (wallpaper.effect != 0) {
-                    onDone(initial.copy(wallpaper = wallpaper, clock = clock,
-                        home = HomeStyle.PAIR), tuning)
-                } else askHome = true
-            }
+                primary = true) { askHome = true }
         }
 
         Column(
@@ -230,7 +224,11 @@ fun CustomiseScreen(
         }
     }
     if (askHome) {
-        HomeDialog(wallpaper, onDismiss = { askHome = false }) { home ->
+        HomeDialog(wallpaper, effect = wallpaper.effect != 0,
+            onDismiss = { askHome = false }, onSkip = {
+            askHome = false
+            onDone(initial.copy(wallpaper = wallpaper, clock = clock, home = HomeStyle.KEEP), tuning)
+        }) { home ->
             askHome = false
             onDone(initial.copy(wallpaper = wallpaper, clock = clock, home = home), tuning)
         }
@@ -776,7 +774,9 @@ private fun ShortcutsSheet(shortcuts: Shortcuts) {
 @Composable
 private fun HomeDialog(
     wallpaper: GalleryWallpaper,
+    effect: Boolean,
     onDismiss: () -> Unit,
+    onSkip: () -> Unit,
     onPick: (HomeStyle) -> Unit,
 ) {
     val context = LocalContext.current
@@ -798,7 +798,9 @@ private fun HomeDialog(
                 fontSize = 14.sp, textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 6.dp, bottom = 16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HomeStyle.entries.forEach { style ->
+                HomeStyle.entries.filter {
+                    it != HomeStyle.KEEP && (!effect || it == HomeStyle.PAIR)
+                }.forEach { style ->
                     Column(horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.width(62.dp).clickable { onPick(style) }) {
                         val shape = RoundedCornerShape(12.dp)
@@ -806,6 +808,7 @@ private fun HomeDialog(
                         Box(Modifier.fillMaxWidth().aspectRatio(0.46f).clip(shape)
                             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape)) {
                             when (style) {
+                                HomeStyle.KEEP -> Unit
                                 HomeStyle.PAIR -> WallpaperImage(wallpaper, Modifier.fillMaxSize())
                                 HomeStyle.BLUR -> WallpaperImage(wallpaper,
                                     Modifier.fillMaxSize().blur(8.dp))
@@ -823,10 +826,14 @@ private fun HomeDialog(
                             HomeStyle.BLUR -> R.string.gallery_home_blur
                             HomeStyle.COLOUR -> R.string.gallery_colour
                             HomeStyle.GRADIENT -> R.string.gallery_home_gradient
+                            HomeStyle.KEEP -> R.string.gallery_home_keep
                         }), color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp,
                             modifier = Modifier.padding(top = 6.dp))
                     }
                 }
+            }
+            TextButton(onClick = onSkip) {
+                Text(stringResource(R.string.gallery_home_keep))
             }
             Spacer(Modifier.height(8.dp))
         }
